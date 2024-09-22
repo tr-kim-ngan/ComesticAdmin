@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/fragments/head::head">
+	
+</head>
+
+  <body>
+    <div class="wrapper">
+      <!-- Sidebar -->
+        <div th:replace="admin/fragments/sidebar::sidebar"> </div> 
+      <!-- End Sidebar -->
+
+      <div class="main-panel">
+		  
+		  <!--  đầu header -->
+       <div th:replace="admin/fragments/header::header"> </div>  
+	   
+			<!-- kết thúc header  -->
+        <div class="container" style="background-color: #faeee7 ;">
+          <div >
+              <div>
+                <h3 class="fw-bold mb-3"> Danh sách các Sản Phẩm</h3>
+	               <table class="table">
+					  <thead>
+					    <tr>
+					      <th scope="col">Mã Sản Phẩm</th>
+					      <th scope="col">Tên Sản Phẩm</th>
+					      <th scope="col">Mô Tả</th>
+					      <th scope="col">Hình Ảnh</th>
+					      <th scope="col">Số Lượng</th>
+					      <th scope="col">Danh Mục</th>
+					      <th scope="col">Đơn Vị</th>
+					      <th scope="col">Khuyến Mãi</th>
+					    </tr>
+					  </thead>
+					  <tbody>
+					    <tr th:each="sanPham : ${sanPhamList}">
+					        <td th:text="${sanPham.maSanPham}"></td>
+					        <td th:text="${sanPham.tenSanPham}"></td>
+					        <td th:text="${sanPham.moTa}"></td>
+					        <td th:text="${sanPham.soLuong}"></td>
+					        <td th:text="${sanPham.donViTinh.tenDonVi}"></td>
+					        <td th:text="${sanPham.donGia}"></td>
+					        <td th:text="${sanPham.danhMuc.tenDanhMuc}"></td>
+					        <td th:text="${sanPham.khuyenMai.tenKhuyenMai}"></td>
+					    </tr>
+					  </tbody>
+					</table>
+               
+              </div>
+             
+            </div>
+        </div>
+		
+		
+		<!--mở đầu footer -->
+        <div th:replace="admin/fragments/footer::footer" ></div>
+		
+		<!--kết thúc footer -->
+      </div>
+
+    
+    
+    </div>
+    <!--   mở đầu JS   -->
+    <div  th:replace="admin/fragments/script::script"  > </div>
+    <!-- kết thúc JS-->
+  </body>
+</html>

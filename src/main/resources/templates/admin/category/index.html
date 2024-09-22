@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/fragments/head::head">
+	
+</head>
+
+  <body>
+    <div class="wrapper">
+      <!-- Sidebar -->
+        <div th:replace="admin/fragments/sidebar::sidebar"> </div>
+      <!-- End Sidebar -->
+
+      <div class="main-panel">
+		  
+		  <!--  đầu header -->
+       <div th:replace="admin/fragments/header::header"> </div>  
+	   
+			<!-- kết thúc header  -->
+        <div class="container" style="background-color: #faeee7 ;">
+          <div >
+              <div>
+                <h3 class="fw-bold mb-3">Danh Mục Sản Phẩm</h3>
+               
+              </div>
+             
+            </div>
+        </div>
+		
+		
+		<!--mở đầu footer -->
+        <div th:replace="admin/fragments/footer::footer" ></div>
+		
+		<!--kết thúc footer -->
+      </div>
+
+    
+    
+    </div>
+    <!--   mở đầu JS   -->
+    <div  th:replace="admin/fragments/script::script"  > </div>
+    <!-- kết thúc JS-->
+  </body>
+</html>
