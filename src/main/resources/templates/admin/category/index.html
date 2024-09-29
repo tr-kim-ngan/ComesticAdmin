@@ -44,8 +44,12 @@
 				            <td style="text-align: center;" th:text="${danhMuc.maDanhMuc}"></td>
 				            <td style="text-align: center;" th:text="${danhMuc.tenDanhMuc}"></td>
 				            <td style="text-align: center;">
-				                <button class="btn btn-primary btn-sm" style="margin-right: 5px;" th:onclick="'window.location.href=\'/admin/edit-category/' + ${danhMuc.maDanhMuc} + '\''">Sửa</button>
-				                <button class="btn btn-danger btn-sm" th:onclick="'window.location.href=\'/admin/delete-category/' + ${danhMuc.maDanhMuc} + '\''">Xóa</button>
+								<a th:href="@{/admin/edit-category/{id}(id=${danhMuc.maDanhMuc})}" class="btn btn-primary btn-sm" style="margin-right: 5px;">Sửa</a>
+								<a th:href="@{/admin/delete-category/{id}(id=${danhMuc.maDanhMuc})}" 
+								       onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này?');" 
+								       class="btn btn-danger btn-sm">
+								        Xóa
+								</a>
 				            </td>
 				        </tr>
 				    </tbody>

@@ -47,4 +47,15 @@ public class DanhMucServiceImpl implements DanhMucService {
             return false;
         }
     }
+
+	@Override
+	public Boolean update(DanhMuc danhMuc) {
+		try {
+            danhMucRepository.save(danhMuc);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+	}
 }

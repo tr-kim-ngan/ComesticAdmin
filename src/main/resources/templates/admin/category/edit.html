@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/fragments/head::head">
+    <title>Chỉnh sửa danh mục</title>
+</head>
+<body>
+<div class="wrapper">
+    <div th:replace="admin/fragments/sidebar::sidebar"></div>
+    <div class="main-panel">
+        <div th:replace="admin/fragments/header::header"></div>
+        <div class="container"  style="background-color: #faeee7;">
+            <div class="page-inner">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="fw-bold mb-3">Chỉnh sửa danh mục</h3>
+                        <!-- Form chỉnh sửa danh mục -->
+                        <form th:action="@{/admin/edit-category}" th:object="${danhMuc}" method="post">
+						    <div class="form-group">
+						        <label for="tenDanhMuc">Tên danh mục:</label>
+						        <input type="text" th:field="*{tenDanhMuc}" class="form-control" placeholder="Nhập tên danh mục">
+						    </div>
+						    <button type="submit" class="btn btn-success">Cập nhật</button>
+						</form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:replace="admin/fragments/footer::footer"></div>
+    </div>
+</div>
+<div th:replace="admin/fragments/script::script"></div>
+</body>
+</html>

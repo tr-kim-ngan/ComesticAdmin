@@ -10,5 +10,6 @@ public interface DanhMucService {
     Boolean create(DanhMuc danhMuc);
     DanhMuc findById (Integer maDanhMuc);
     Boolean delete(Integer maDanhMuc);
+    Boolean update (DanhMuc danhMuc);
 
 }
