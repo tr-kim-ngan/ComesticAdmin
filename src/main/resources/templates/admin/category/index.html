@@ -1,43 +1,67 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="admin/fragments/head::head">
-	
+   
 </head>
-
-  <body>
-    <div class="wrapper">
-      <!-- Sidebar -->
-        <div th:replace="admin/fragments/sidebar::sidebar"> </div>
-      <!-- End Sidebar -->
-
-      <div class="main-panel">
-		  
-		  <!--  đầu header -->
-       <div th:replace="admin/fragments/header::header"> </div>  
-	   
-			<!-- kết thúc header  -->
-        <div class="container" style="background-color: #faeee7 ;">
-          <div >
-              <div>
-                <h3 class="fw-bold mb-3">Danh Mục Sản Phẩm</h3>
-               
-              </div>
-             
-            </div>
-        </div>
+<body>
+<div class ="wrapper">
+    <!-- Sidebar -->
+    <div th:replace="admin/fragments/sidebar::sidebar"> </div>
+    <!-- End Sidebar -->
+    
+    
+    <div class="main-panel">
+        <!--  đầu header -->
+        <div th:replace="admin/fragments/header :: header"></div>
+        <!-- kết thúc header  -->
+        <div class="container" style="background-color: #faeee7;">
+		    <div class="page-inner">
+		        <div class="d-flex justify-content-between align-items-center">
+		            <div>
+		                <h3 class="fw-bold mb-3">Danh Mục</h3>
+		                <h6 class="op-7 mb-2">Danh sách các danh mục sản phẩm</h6>
+		            </div>
+		            <!-- Nút Thêm danh mục -->
+		            <div>
+		                <a th:href="@{add-category}" class="btn btn-success btn-lg" style="background-color: #28a745;">
+		                    Thêm danh mục
+		                </a>
+		            </div>
+		        </div>
 		
-		
+		        <!-- Bảng danh sách danh mục -->
+				 <table class="table table-hover table-bordered" style="background-color: white; border-radius: 8px;">
+				    <thead class="thead-dark" style="background-color: #ffc6c7; color: #333;">
+				        <tr>
+				            <th style="text-align: center;">ID</th>
+				            <th style="text-align: center;">Tên danh mục</th>
+				            <th style="text-align: center;">Hành động</th>
+				        </tr>
+				    </thead>
+				    <tbody>
+				        <!-- Dùng Thymeleaf để lặp qua danh sách danh mục -->
+				        <tr th:each="danhMuc : ${list}">
+				            <td style="text-align: center;" th:text="${danhMuc.maDanhMuc}"></td>
+				            <td style="text-align: center;" th:text="${danhMuc.tenDanhMuc}"></td>
+				            <td style="text-align: center;">
+				                <button class="btn btn-primary btn-sm" style="margin-right: 5px;" th:onclick="'window.location.href=\'/admin/edit-category/' + ${danhMuc.maDanhMuc} + '\''">Sửa</button>
+				                <button class="btn btn-danger btn-sm" th:onclick="'window.location.href=\'/admin/delete-category/' + ${danhMuc.maDanhMuc} + '\''">Xóa</button>
+				            </td>
+				        </tr>
+				    </tbody>
+				</table>
+		    </div>
+		</div>
 		<!--mở đầu footer -->
         <div th:replace="admin/fragments/footer::footer" ></div>
 		
 		<!--kết thúc footer -->
-      </div>
 
-    
-    
     </div>
-    <!--   mở đầu JS   -->
+
+</div>
+<!--   Core JS Files   -->
     <div  th:replace="admin/fragments/script::script"  > </div>
     <!-- kết thúc JS-->
-  </body>
+</body>
 </html>
