@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 
 @Controller
-@RequestMapping("/admin/product")
+@RequestMapping("/admin")
 public class ProductController {
 
     @Autowired
    
 
-    @GetMapping
+    @RequestMapping("/product")
     public String index() {
         
         

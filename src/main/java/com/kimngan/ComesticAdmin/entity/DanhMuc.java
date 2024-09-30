@@ -14,14 +14,29 @@ public class DanhMuc {
 
     @Column(name = "tenDanhMuc", length = 100, nullable = false)
     private String tenDanhMuc;
-
-    // Getters and Setters
+    
+    // quan hệ với SanPham(One -to - Many)
+    @OneToMany(mappedBy = "danhMuc")
+    private Set<SanPham> sanPhams;
+    
+  
+   
     public DanhMuc() {}
+     
+    
+    
 
-    public DanhMuc(String tenDanhMuc) {
-        this.tenDanhMuc = tenDanhMuc;
-    }
+    public DanhMuc(Integer maDanhMuc, String tenDanhMuc, Set<SanPham> sanPhams) {
+		super();
+		this.maDanhMuc = maDanhMuc;
+		this.tenDanhMuc = tenDanhMuc;
+		this.sanPhams = sanPhams;
+	}
 
+
+
+
+	// Getters and Setters
     public Integer getMaDanhMuc() {
         return maDanhMuc;
     }
@@ -37,4 +52,11 @@ public class DanhMuc {
     public void setTenDanhMuc(String tenDanhMuc) {
         this.tenDanhMuc = tenDanhMuc;
     }
+    
+    public Set<SanPham> getSanPhams() {
+		return sanPhams;
+	}
+    public void setSanPhams(Set<SanPham> sanPhams) {
+		this.sanPhams = sanPhams;
+	}
 }
