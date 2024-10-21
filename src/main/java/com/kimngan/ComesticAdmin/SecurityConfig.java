@@ -51,7 +51,7 @@ public class SecurityConfig {
     // Cấu hình WebSecurity để bỏ qua một số đường dẫn static resources
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/static/**", "/assets/**");
+        return (web) -> web.ignoring().requestMatchers("/static/**", "/assets/**","/upload/**");
     }
 
     // Password encoder để mã hóa mật khẩu
@@ -60,3 +60,23 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
