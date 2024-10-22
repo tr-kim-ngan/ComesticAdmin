@@ -1,4 +1,6 @@
 package com.kimngan.ComesticAdmin.repository;
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,5 +11,7 @@ public interface DanhMucRepository extends JpaRepository<DanhMuc,Integer>{
 	// Kiểm tra sự tồn tại của tên danh mục
 	    boolean existsByTenDanhMuc(String tenDanhMuc);
 	    DanhMuc findByTenDanhMuc(String tenDanhMuc);
+		//List<DanhMuc> findByTrangThaiTrue();
+	    List<DanhMuc> findAll();
 
 }

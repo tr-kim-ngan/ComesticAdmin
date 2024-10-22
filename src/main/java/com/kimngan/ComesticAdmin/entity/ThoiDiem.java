@@ -28,6 +28,9 @@ public class ThoiDiem {
 	
 		
 	}
+    public ThoiDiem(LocalDateTime ngayGio) {
+        this.ngayGio = ngayGio;
+    }
 	public ThoiDiem(LocalDateTime ngayGio, Set<DonGiaBanHang> donGiaBanHangs) {
 		super();
 		this.ngayGio = ngayGio;
@@ -50,6 +53,8 @@ public class ThoiDiem {
     public void setDonGiaBanHangs(Set<DonGiaBanHang> donGiaBanHangs) {
         this.donGiaBanHangs = donGiaBanHangs;
     }
+    
+
     
     
 }

@@ -97,9 +97,6 @@ public class SanPhamServiceImpl implements SanPhamService {
 		return sanPhamRepository.findByTrangThai(trangThai);
 	}
 
-	@Override
-	public BigDecimal getGiaBanHienTai(SanPham sanPham) {
-		return sanPham.getLatestDonGiaBan(); // Lấy giá bán mới nhất từ phương thức getLatestDonGiaBan()
-	}
+	
 
 }

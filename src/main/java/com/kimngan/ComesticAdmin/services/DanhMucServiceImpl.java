@@ -86,4 +86,12 @@ public class DanhMucServiceImpl implements DanhMucService {
 		return danhMucRepository.findByTenDanhMucContainingIgnoreCase(tenDanhMuc, pageable);
 	}
 
+	
+
+//	@Override
+//	public List<DanhMuc> findByTrangThaiTrue() {
+//		// TODO Auto-generated method stub
+//		return danhMucRepository.findByTrangThaiTrue();
+//	}
+
 }

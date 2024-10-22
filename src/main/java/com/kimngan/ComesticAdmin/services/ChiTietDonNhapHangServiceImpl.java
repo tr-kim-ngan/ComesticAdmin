@@ -21,53 +21,53 @@ public class ChiTietDonNhapHangServiceImpl implements ChiTietDonNhapHangService 
 	@Override
 	public List<ChiTietDonNhapHang> getAll() {
 		// TODO Auto-generated method stub
-		 return chiTietDonNhapHangRepository.findAll();
+		return chiTietDonNhapHangRepository.findAll();
 	}
 
 	@Override
 	public ChiTietDonNhapHang findById(ChiTietDonNhapHangId id) {
 		// TODO Auto-generated method stub
-		 return chiTietDonNhapHangRepository.findById(id).orElse(null);
+		return chiTietDonNhapHangRepository.findById(id).orElse(null);
 	}
 
 	@Override
 	public Boolean create(ChiTietDonNhapHang chiTietDonNhapHang) {
-	    try {
-	        chiTietDonNhapHangRepository.save(chiTietDonNhapHang);
-	        return true;
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return false;
-	    }
+		try {
+			chiTietDonNhapHangRepository.save(chiTietDonNhapHang);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	@Override
 	public Boolean update(ChiTietDonNhapHang chiTietDonNhapHang) {
 		// TODO Auto-generated method stub
 		try {
-            chiTietDonNhapHangRepository.save(chiTietDonNhapHang);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+			chiTietDonNhapHangRepository.save(chiTietDonNhapHang);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	@Override
 	public Boolean delete(ChiTietDonNhapHangId id) {
 		// TODO Auto-generated method stub
 		ChiTietDonNhapHang chiTiet = chiTietDonNhapHangRepository.findById(id).orElse(null);
-        if (chiTiet != null) {
-            chiTiet.setTrangThai(false);
-            chiTietDonNhapHangRepository.save(chiTiet);
-            return true;
-        }
-        return false;
+		if (chiTiet != null) {
+			chiTiet.setTrangThai(false);
+			chiTietDonNhapHangRepository.save(chiTiet);
+			return true;
+		}
+		return false;
 	}
 
 	@Override
 	public Page<ChiTietDonNhapHang> findAll(Pageable pageable) {
 		// TODO Auto-generated method stub
-		 return chiTietDonNhapHangRepository.findAll(pageable);
+		return chiTietDonNhapHangRepository.findAll(pageable);
 	}
 
 	@Override
@@ -81,15 +81,21 @@ public class ChiTietDonNhapHangServiceImpl implements ChiTietDonNhapHangService 
 		// TODO Auto-generated method stub
 		return chiTietDonNhapHangRepository.findByDonNhapHang(donNhapHang);
 	}
-	
-	 // Phương thức tìm chi tiết đơn nhập hàng theo sản phẩm
-    @Override
-    public List<ChiTietDonNhapHang> findBySanPham(SanPham sanPham) {
-        return chiTietDonNhapHangRepository.findBySanPham(sanPham);
-    }
-	
-	
 
-	
+	// Phương thức tìm chi tiết đơn nhập hàng theo sản phẩm
+	@Override
+	public List<ChiTietDonNhapHang> findBySanPham(SanPham sanPham) {
+		return chiTietDonNhapHangRepository.findBySanPham(sanPham);
+	}
+
+	@Override
+	public void updateChiTietDonNhapHangForProduct(SanPham sanPham) {
+		  List<ChiTietDonNhapHang> chiTietDonNhapHangList = chiTietDonNhapHangRepository.findBySanPham(sanPham);
+
+		    for (ChiTietDonNhapHang chiTiet : chiTietDonNhapHangList) {
+		        chiTiet.setSanPham(sanPham); // Cập nhật thông tin sản phẩm liên quan
+		        chiTietDonNhapHangRepository.save(chiTiet);
+		    }
+	}
 
 }

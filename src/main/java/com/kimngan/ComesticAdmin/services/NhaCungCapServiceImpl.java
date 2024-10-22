@@ -113,6 +113,12 @@ public class NhaCungCapServiceImpl implements NhaCungCapService {
 		// TODO Auto-generated method stub
 		return nhaCungCapRepository.findByTrangThaiTrue();
 	}
+
+	@Override
+	public List<NhaCungCap> getAllActive() {
+		// TODO Auto-generated method stub
+		return nhaCungCapRepository.findByTrangThaiTrue(); // Lấy nhà cung cấp có trạng thái = 1 (active)
+	}
 	
 	
 

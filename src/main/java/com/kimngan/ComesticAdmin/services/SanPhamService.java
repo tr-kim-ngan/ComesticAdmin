@@ -34,6 +34,6 @@ public interface SanPhamService {
 
 	Boolean existsByTenSanPham(String tenSanPham);
 	// Lấy giá bán mới nhất từ phương thức getLatestDonGiaBan()
-	BigDecimal getGiaBanHienTai(SanPham sanPham);
+//	BigDecimal getGiaBanHienTai(SanPham sanPham);
 
 }

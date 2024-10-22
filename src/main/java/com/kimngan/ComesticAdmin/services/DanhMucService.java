@@ -22,5 +22,6 @@ public interface DanhMucService {
 
     // Tìm kiếm danh mục theo tên
     Page<DanhMuc> searchByName(String tenDanhMuc, Pageable pageable);
+	//List<DanhMuc> findByTrangThaiTrue();
 
 }

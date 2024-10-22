@@ -29,7 +29,9 @@ public interface NhaCungCapService {
 	
 	// Thêm phương thức tìm tất cả nhà cung cấp đang hoạt động
 	
-	 Page<NhaCungCap> findAllActive(Pageable pageable); 
+	Page<NhaCungCap> findAllActive(Pageable pageable); 
+	 
+	 
 	// Tìm kiếm nhà cung cấp theo ID với Optional
     Optional<NhaCungCap> findByIdOptional(Integer maNhaCungCap);
     Boolean existsByEmailNhaCungCap(String emailNhaCungCap);
@@ -39,6 +41,8 @@ public interface NhaCungCapService {
     //Thêm phương thức tìm nhà cung cấp có trạng thái hoạt động (true):
 
     List<NhaCungCap> findByTrangThaiTrue();
+    
+    List<NhaCungCap> getAllActive();
 
 
 }

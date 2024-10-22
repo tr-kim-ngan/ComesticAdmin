@@ -30,4 +30,7 @@ public interface ChiTietDonNhapHangService {
 	Page<ChiTietDonNhapHang> searchBySanPhamName(String tenSanPham, Pageable pageable);
 	
 	List<ChiTietDonNhapHang> findBySanPham(SanPham sanPham);
+	void updateChiTietDonNhapHangForProduct(SanPham sanPham);
+	
+	
 }

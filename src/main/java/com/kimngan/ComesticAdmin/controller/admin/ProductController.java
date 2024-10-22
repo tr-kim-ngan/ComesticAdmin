@@ -33,6 +33,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.IOException;
@@ -125,8 +127,7 @@ public class ProductController {
 
 	@PostMapping("/add-product")
 	public String saveProduct(@ModelAttribute("sanPham") SanPham sanPham,
-			@RequestParam("donViTinh") Integer donViTinhId, 
-			@RequestParam("donGiaBan") BigDecimal donGiaBan,
+			@RequestParam("donViTinh") Integer donViTinhId, @RequestParam("donGiaBan") BigDecimal donGiaBan,
 			@RequestParam("nhaCungCapId") Integer nhaCungCapId,
 			@RequestParam("thoiDiemBan") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime thoiDiemBan,
 			@RequestParam("imageFile") MultipartFile imageFile, Model model) {
@@ -204,25 +205,77 @@ public class ProductController {
 	public String editProductPage(@PathVariable("id") Integer id, Model model) {
 		SanPham sanPham = sanPhamService.findById(id);
 		if (sanPham == null) {
-			return "redirect:/admin/products"; // Nếu không tìm thấy, quay lại danh sách sản phẩm
+			return "redirect:/admin/products"; // Nếu không tìm thấy sản phẩm
 		}
 
-		model.addAttribute("sanPham", sanPham);
+		PageRequest pageRequest = PageRequest.of(0, 10); // Lấy 10 đơn vị tính đầu tiên
+		List<DonViTinh> listDonViTinh = donViTinhService.findAll(pageRequest).getContent();
 
+		// Thêm sản phẩm vào model
+		model.addAttribute("sanPham", sanPham);
+		model.addAttribute("listDonViTinh", listDonViTinh);
+
+		// Lấy danh sách danh mục để hiển thị trong form
+		List<DanhMuc> listDanhMuc = danhMucService.getAll();
+		model.addAttribute("listDanhMuc", listDanhMuc);
+		// Thêm đoạn code lấy thông tin người dùng
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		NguoiDungDetails userDetails = (NguoiDungDetails) authentication.getPrincipal();
 		model.addAttribute("user", userDetails);
 
-		return "admin/product/edit"; // Trả về form chỉnh sửa sản phẩm
+		return "admin/product/edit"; // Chuyển hướng tới trang chỉnh sửa
 	}
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+	// Phương thức hiển thị trang chi tiết sản phẩm
+
+	@PostMapping("/update-product")
+	public String updateProduct(@ModelAttribute("sanPham") SanPham sanPham,
+			@RequestParam("imageFile") MultipartFile imageFile,
+			@RequestParam("donGiaBan") BigDecimal donGiaBan,
+			RedirectAttributes redirectAttributes) {
+
+		// Lấy sản phẩm hiện tại từ cơ sở dữ liệu
+		SanPham existingSanPham = sanPhamService.findById(sanPham.getMaSanPham());
+
+		if (existingSanPham == null) {
+			redirectAttributes.addFlashAttribute("error", "Không tìm thấy sản phẩm.");
+			return "redirect:/admin/products";
+		}
+
+		 // Xử lý ảnh nếu có
+	    if (!imageFile.isEmpty()) {
+	        try {
+	            String imageName = storageService.storeFile(imageFile);
+	            existingSanPham.setHinhAnh(imageName); // Cập nhật ảnh trong sản phẩm hiện tại
+	        } catch (IOException e) {
+	            redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi tải ảnh.");
+	            return "redirect:/admin/edit-product/" + sanPham.getMaSanPham();
+	        }
+	    } else {
+	        // Nếu không có ảnh mới được tải lên, giữ lại ảnh cũ
+	        sanPham.setHinhAnh(existingSanPham.getHinhAnh());
+	    }
+
+
+		// Cập nhật thông tin sản phẩm từ form
+		existingSanPham.setTenSanPham(sanPham.getTenSanPham());
+		existingSanPham.setMoTa(sanPham.getMoTa());
+		existingSanPham.setSoLuong(sanPham.getSoLuong());
+		existingSanPham.setDanhMuc(sanPham.getDanhMuc());
+		existingSanPham.setDonViTinh(sanPham.getDonViTinh());
+		existingSanPham.setDonGiaBan(donGiaBan);
+
+		// Cập nhật chi tiết đơn nhập hàng nếu có thay đổi về tên sản phẩm
+		chiTietDonNhapHangService.updateChiTietDonNhapHangForProduct(existingSanPham);
+
+		// Lưu sản phẩm sau khi cập nhật các thông tin liên quan
+		sanPhamService.update(existingSanPham);
+
+		redirectAttributes.addFlashAttribute("success",
+				"Sản phẩm và các thông tin liên quan đã được cập nhật thành công.");
+		return "redirect:/admin/view-product/" + sanPham.getMaSanPham();
+	}
 
 	// Controller cho xóa sản phẩm (chỉ cập nhật trạng thái thành false)
 	@PostMapping("/delete-product/{id}")
@@ -232,7 +285,7 @@ public class ProductController {
 		if (sanPham == null) {
 			// Nếu sản phẩm không tồn tại
 			redirectAttributes.addFlashAttribute("errorMessage", "Sản phẩm không tồn tại.");
-			return "redirect:/admin/products";
+			return "redirect:/admin/product";
 		}
 
 		if (sanPham.isTrangThai() == false) {
@@ -272,7 +325,8 @@ public class ProductController {
 		Set<NhaCungCap> nhaCungCaps = sanPham.getNhaCungCaps();
 
 		// Lấy giá bán mới nhất
-		BigDecimal giaBanHienTai = sanPham.getLatestDonGiaBan(); // Lấy giá bán mới nhất
+		// BigDecimal giaBanHienTai = sanPham.getLatestDonGiaBan(); // Lấy giá bán mới
+		// nhất
 		// Đưa sản phẩm, danh mục, nhà cung cấp và danh sách chi tiết đơn nhập hàng vào
 		// Model để hiển thị
 		model.addAttribute("sanPham", sanPham);
