@@ -69,9 +69,9 @@ public class SanPhamServiceImpl implements SanPhamService {
 	}
 
 	@Override
-	public Page<SanPham> searchByName(String tenSanPham, Pageable pageable) {
+	public Page<SanPham> searchActiveByName(String tenSanPham, Pageable pageable) {
 		// TODO Auto-generated method stub
-		return sanPhamRepository.findByTenSanPhamContainingIgnoreCase(tenSanPham, pageable);
+		return sanPhamRepository.findByTenSanPhamContainingIgnoreCaseAndTrangThai(tenSanPham,true, pageable);
 	}
 
 	@Override

@@ -25,7 +25,7 @@ public interface SanPhamService {
 
 	Page<SanPham> findAll(Pageable pageable);
 
-	Page<SanPham> searchByName(String tenSanPham, Pageable pageable);
+	Page<SanPham> searchActiveByName(String tenSanPham, Pageable pageable);
 
 	Page<SanPham> findAllActive(Pageable pageable); // Tìm sản phẩm đang hoạt động
 	// Tìm sản phẩm theo ID với Optional

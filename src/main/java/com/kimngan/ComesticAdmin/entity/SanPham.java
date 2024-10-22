@@ -29,8 +29,10 @@ public class SanPham {
 	@Column(name = "SoLuong")
 	private Integer soLuong;
 	
+	
 	@Column(name = "TrangThai", nullable = false)
     private boolean trangThai = true; 
+	
 	@Column(name = "DonGiaBan", precision = 8, scale = 2, nullable = false)
 	private BigDecimal donGiaBan;
 

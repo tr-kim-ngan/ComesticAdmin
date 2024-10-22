@@ -70,10 +70,28 @@
 								<td style="text-align: center;" th:text="${sanPham.donViTinh.tenDonVi}"></td>
 
 								<td style="text-align: center;" th:text="${sanPham.danhMuc.tenDanhMuc}"></td>
+
+
 								<td style="text-align: center;">
-									<a class="btn btn-info btn-sm" style="margin-right: 5px;"
-										th:href="@{/admin/view-product/{id}(id=${sanPham.maSanPham})}">Xem chi tiết</a>
+									<div style="display: flex; flex-direction: column; align-items: center;">
+										<!-- Nút xem chi tiết -->
+										<a class="btn btn-primary btn-sm mb-2" style="width: 100px;"
+											th:href="@{/admin/view-product/{id}(id=${sanPham.maSanPham})}">Xem chi
+											tiết</a>
+
+										<!-- Nút xóa -->
+										<form action="#"
+											th:action="@{/admin/delete-product/{id}(id=${sanPham.maSanPham})}"
+											method="post" style="display:inline;">
+											<input type="hidden" name="_method" value="DELETE" />
+											<button type="submit" class="btn btn-danger btn-sm" style="width: 100px;"
+												onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">Xóa</button>
+										</form>
+									</div>
 								</td>
+
+
+
 							</tr>
 						</tbody>
 					</table>

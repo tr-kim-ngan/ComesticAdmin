@@ -11,7 +11,7 @@ import com.kimngan.ComesticAdmin.entity.SanPham;
 
 public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
 	// Tìm sản phẩm theo tên
-	Page<SanPham> findByTenSanPhamContainingIgnoreCase(String tenSanPham, Pageable pageable);
+	Page<SanPham> findByTenSanPhamContainingIgnoreCaseAndTrangThai(String tenSanPham, Boolean trangThai, Pageable pageable);
 
 	// Kiểm tra xem sản phẩm có tồn tại và đang hoạt động không
 	boolean existsByTenSanPhamAndTrangThai(String tenSanPham, boolean b);
