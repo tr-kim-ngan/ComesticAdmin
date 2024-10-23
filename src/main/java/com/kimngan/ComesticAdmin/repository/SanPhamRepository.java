@@ -22,5 +22,6 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
 	//List<SanPham> findByTrangThai();
 	//List<SanPham> findByTrangThai(Boolean trangThai);
 	List<SanPham> findByTrangThai(Boolean trangThai);
+	List<SanPham> findByMaSanPhamInAndTrangThai(List<Integer> maSanPham, Boolean trangThai);
 
 }

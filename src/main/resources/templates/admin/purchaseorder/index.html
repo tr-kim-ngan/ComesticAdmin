@@ -40,11 +40,11 @@
 						<span th:text="${errorMessage}"></span>
 					</div>
 					<div class="table-responsive">
-						<table class="table table-bordered table-striped">
+						<table class="table table-hover table-bordered table-striped">
 							<thead  class="thead-dark" style="background-color: #ffc6c7; color: #333;">
 								<tr>
 									<th>STT</th> <!-- Cột Số thứ tự -->
-									<th>Mã Đơn Nhập</th>
+									<!--<th>Mã Đơn Nhập</th>-->
 									<th>Ngày Nhập</th>
 									<th>Nhà Cung Cấp</th>
 									<th>Tổng Số Tiền</th>
@@ -58,7 +58,7 @@
 									<!-- STT (Số thứ tự) -->
 									<td th:text="${stat.count}"></td>
 									<!-- Mã Đơn Nhập là tên nhà cung cấp -->
-									<td th:text="${donNhapHang.maDonNhapHang}"></td>
+									<!--<td th:text="${donNhapHang.maDonNhapHang}"></td>-->
 									<!-- Ngày nhập hàng -->
 									<td th:text="${#temporals.format(donNhapHang.ngayNhapHang, 'yyyy-MM-dd')}"></td>
 									<!-- Nhà cung cấp -->

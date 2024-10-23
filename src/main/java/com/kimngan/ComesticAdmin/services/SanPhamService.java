@@ -33,7 +33,11 @@ public interface SanPhamService {
 	Optional<SanPham> findByIdOptional(Integer maSanPham);
 
 	Boolean existsByTenSanPham(String tenSanPham);
-	// Lấy giá bán mới nhất từ phương thức getLatestDonGiaBan()
-//	BigDecimal getGiaBanHienTai(SanPham sanPham);
+	List<SanPham> findByMaSanPhamInAndTrangThai(List<Integer> maSanPham, Boolean trangThai) ;
+	
+	
+	
+	
+	
 
 }

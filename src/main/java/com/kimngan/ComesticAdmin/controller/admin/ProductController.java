@@ -1,22 +1,23 @@
 package com.kimngan.ComesticAdmin.controller.admin;
 
 import com.kimngan.ComesticAdmin.entity.SanPham;
-import com.kimngan.ComesticAdmin.entity.ThoiDiem;
+//import com.kimngan.ComesticAdmin.entity.ThoiDiem;
 import com.kimngan.ComesticAdmin.entity.ChiTietDonNhapHang;
 import com.kimngan.ComesticAdmin.entity.DanhMuc;
-import com.kimngan.ComesticAdmin.entity.DonGiaBanHang;
-import com.kimngan.ComesticAdmin.entity.DonGiaBanHangId;
+//import com.kimngan.ComesticAdmin.entity.DonGiaBanHang;
+//import com.kimngan.ComesticAdmin.entity.DonGiaBanHangId;
 import com.kimngan.ComesticAdmin.entity.DonViTinh;
+import com.kimngan.ComesticAdmin.entity.KhuyenMai;
 import com.kimngan.ComesticAdmin.entity.NguoiDungDetails;
 import com.kimngan.ComesticAdmin.entity.NhaCungCap;
 import com.kimngan.ComesticAdmin.services.ChiTietDonNhapHangService;
 import com.kimngan.ComesticAdmin.services.DanhMucService;
-import com.kimngan.ComesticAdmin.services.DonGiaBanHangService;
+//import com.kimngan.ComesticAdmin.services.DonGiaBanHangService;
 import com.kimngan.ComesticAdmin.services.DonViTinhService;
 import com.kimngan.ComesticAdmin.services.NhaCungCapService;
 import com.kimngan.ComesticAdmin.services.SanPhamService;
 import com.kimngan.ComesticAdmin.services.StorageService;
-import com.kimngan.ComesticAdmin.services.ThoiDiemService;
+//import com.kimngan.ComesticAdmin.services.ThoiDiemService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,14 +36,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import org.springframework.format.annotation.DateTimeFormat;
+//import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 //import java.util.List;
-import java.time.LocalDateTime;
+//import java.time.LocalDateTime;
+//import java.time.ZoneId;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -56,10 +62,10 @@ public class ProductController {
 	private DanhMucService danhMucService;
 	@Autowired
 	private StorageService storageService;
-	@Autowired
-	private ThoiDiemService thoiDiemService;
-	@Autowired
-	private DonGiaBanHangService donGiaBanHangService;
+	//@Autowired
+	//private ThoiDiemService thoiDiemService;
+	//@Autowired
+	//private DonGiaBanHangService donGiaBanHangService;
 	@Autowired
 	private NhaCungCapService nhaCungCapService;
 	@Autowired
@@ -70,7 +76,8 @@ public class ProductController {
 
 	// Hiển thị danh sách sản phẩm
 	@GetMapping("/product")
-	public String index(Model model, @RequestParam(value = "page", defaultValue = "0") int page,
+	public String index(Model model, 
+			@RequestParam(value = "page", defaultValue = "0") int page,
 			@RequestParam(value = "size", defaultValue = "5") int size,
 			@RequestParam(value = "keyword", required = false) String keyword) {
 
@@ -89,7 +96,30 @@ public class ProductController {
 		if (page > pageSanPham.getTotalPages()) {
 			pageSanPham = sanPhamService.findAll(PageRequest.of(pageSanPham.getTotalPages() - 1, size));
 		}
+		
+		List<SanPham> sanPhams = pageSanPham.getContent();
+	    LocalDate today = LocalDate.now();
 
+	    // Sử dụng Map với maSanPham làm key
+	    Map<Integer, KhuyenMai> sanPhamKhuyenMaiMap = new HashMap<>();
+
+	    for (SanPham sanPham : sanPhams) {
+	        // Tìm khuyến mãi cao nhất hiện tại có trạng thái true
+	        Optional<KhuyenMai> highestCurrentKhuyenMai = sanPham.getKhuyenMais().stream()
+	                .filter(km -> km.getTrangThai()) // Chỉ lấy khuyến mãi có trạng thái true
+	                .filter(km -> !km.getNgayBatDau().toLocalDate().isAfter(today)
+	                        && !km.getNgayKetThuc().toLocalDate().isBefore(today))
+	                .max(Comparator.comparing(KhuyenMai::getPhanTramGiamGia));
+	     // Debug in ra nếu tìm thấy khuyến mãi
+	      //  highestCurrentKhuyenMai.ifPresent(km -> System.out.println("Khuyến mãi ID: " + km.getMaKhuyenMai()));
+
+	        // Thêm vào map với maSanPham làm key
+	        sanPhamKhuyenMaiMap.put(sanPham.getMaSanPham(), highestCurrentKhuyenMai.orElse(null));
+	    }
+
+	   // model.addAttribute("listSanPham", sanPhams);
+	    model.addAttribute("highestKhuyenMais", sanPhamKhuyenMaiMap); 
+	    model.addAttribute("listSanPham", sanPhams);
 		model.addAttribute("listSanPham", pageSanPham.getContent());
 		model.addAttribute("currentPage", pageSanPham.getNumber());
 		model.addAttribute("totalPages", pageSanPham.getTotalPages());
@@ -127,9 +157,9 @@ public class ProductController {
 
 	@PostMapping("/add-product")
 	public String saveProduct(@ModelAttribute("sanPham") SanPham sanPham,
-			@RequestParam("donViTinh") Integer donViTinhId, @RequestParam("donGiaBan") BigDecimal donGiaBan,
+			@RequestParam("donViTinh") Integer donViTinhId,
+		
 			@RequestParam("nhaCungCapId") Integer nhaCungCapId,
-			@RequestParam("thoiDiemBan") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime thoiDiemBan,
 			@RequestParam("imageFile") MultipartFile imageFile, Model model) {
 
 		// Thêm đoạn code lấy thông tin người dùng
@@ -174,25 +204,25 @@ public class ProductController {
 		if (savedSanPham != null) {
 
 			// Kiểm tra xem ThoiDiem đã tồn tại chưa, nếu chưa thì tạo mới
-			ThoiDiem thoiDiem = thoiDiemService.findByNgayGio(thoiDiemBan);
-			if (thoiDiem == null) {
-				thoiDiem = new ThoiDiem();
-				thoiDiem.setNgayGio(thoiDiemBan);
-				thoiDiemService.create(thoiDiem);
-			}
+//			ThoiDiem thoiDiem = thoiDiemService.findByNgayGio(thoiDiemBan);
+//			if (thoiDiem == null) {
+//				thoiDiem = new ThoiDiem();
+//				thoiDiem.setNgayGio(thoiDiemBan);
+//				thoiDiemService.create(thoiDiem);
+//			}
 
 			// Tạo DonGiaBanHangId với MaSanPham và NgayGio
-			DonGiaBanHangId donGiaBanHangId = new DonGiaBanHangId(savedSanPham.getMaSanPham(), thoiDiemBan);
+			//DonGiaBanHangId donGiaBanHangId = new DonGiaBanHangId(savedSanPham.getMaSanPham(), thoiDiemBan);
 
-			// Tạo đối tượng DonGiaBanHang
-			DonGiaBanHang donGiaBanHang = new DonGiaBanHang();
-			donGiaBanHang.setId(donGiaBanHangId);
-			donGiaBanHang.setSanPham(savedSanPham);
-			donGiaBanHang.setThoiDiem(thoiDiem);
-			donGiaBanHang.setDonGiaBan(donGiaBan);
+//			// Tạo đối tượng DonGiaBanHang
+//			DonGiaBanHang donGiaBanHang = new DonGiaBanHang();
+//			donGiaBanHang.setId(donGiaBanHangId);
+//			donGiaBanHang.setSanPham(savedSanPham);
+			//donGiaBanHang.setThoiDiem(thoiDiem);
+			//donGiaBanHang.setDonGiaBan(donGiaBan);
 
 			// Lưu DonGiaBanHang
-			donGiaBanHangService.create(donGiaBanHang);
+			//donGiaBanHangService.create(donGiaBanHang);
 
 			return "redirect:/admin/product";
 		} else {
@@ -276,7 +306,9 @@ public class ProductController {
 
 	// Controller cho xóa sản phẩm (chỉ cập nhật trạng thái thành false)
 	@PostMapping("/delete-product/{id}")
-	public String deleteProduct(@PathVariable("id") Integer id, Model model, @RequestParam(defaultValue = "0") int page,
+	public String deleteProduct(@PathVariable("id") Integer id,
+			Model model, 
+			@RequestParam(defaultValue = "0") int page,
 			RedirectAttributes redirectAttributes) {
 
 		SanPham sanPham = sanPhamService.findById(id);

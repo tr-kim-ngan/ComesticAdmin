@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.kimngan.ComesticAdmin.entity.DanhMuc;
 public interface DanhMucRepository extends JpaRepository<DanhMuc,Integer>{
+	
 	 Page<DanhMuc> findByTenDanhMucContainingIgnoreCase(String tenDanhMuc, Pageable pageable);
 	// Kiểm tra sự tồn tại của tên danh mục
 	    boolean existsByTenDanhMuc(String tenDanhMuc);

@@ -34,11 +34,11 @@
 
 					<!-- Table of suppliers -->
 					<div class="table-responsive">
-						<table class="table table-bordered table-striped">
+						<table class="table table-hover table-bordered table-striped">
 							<thead class="thead-dark" style="background-color: #ffc6c7; color: #333;">
 								<tr>
 									<th>STT</th> <!-- Cột Số thứ tự -->
-									<th>Mã Nhà Cung Cấp</th>
+									<!--<th>Mã Nhà Cung Cấp</th>-->
 									<th>Tên Nhà Cung Cấp</th>
 									<th>Email</th>
 									<th>Số điện thoại</th>
@@ -49,7 +49,7 @@
 								<!-- Loop through supplier list and add Số thứ tự -->
 								<tr th:each="supplier, stat : ${listNhaCungCap}">
 									<td th:text="${stat.count}"></td> <!-- Số thứ tự -->
-									<td th:text="${supplier.maNhaCungCap}"></td>
+									<!--<td th:text="${supplier.maNhaCungCap}"></td>-->
 									<td th:text="${supplier.tenNhaCungCap}"></td>
 									<td th:text="${supplier.emailNhaCungCap}"></td>
 									<td th:text="${supplier.sdtNhaCungCap}"></td>

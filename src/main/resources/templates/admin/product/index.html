@@ -39,6 +39,7 @@
 								<th style="text-align: center;">Tên sản phẩm</th>
 								<th style="text-align: center;">Hình ảnh</th>
 								<th style="text-align: center;">Mô tả</th>
+								<th style="text-align: center;">Khuyến mãi</th>
 								<th style="text-align: center;">Số lượng</th>
 								<th style="text-align: center;">Đơn giá</th>
 								<th style="text-align: center;">Đơn vị tính</th>
@@ -64,6 +65,22 @@
 
 
 								<td style="text-align: center;" th:text="${sanPham.moTa}"></td>
+								<!-- Cột khuyến mãi -->
+								<td style="text-align: center;">
+									<span th:if="${highestKhuyenMais[sanPham.maSanPham] == null}">
+										Không có khuyến mãi
+									</span>
+									<span th:if="${highestKhuyenMais[sanPham.maSanPham] != null}">
+										<span th:text="${highestKhuyenMais[sanPham.maSanPham].tenKhuyenMai}"></span>
+										<span
+											th:text="' - ' + ${highestKhuyenMais[sanPham.maSanPham].phanTramGiamGia} + '%'"></span>
+									</span>
+								</td>
+
+
+
+
+
 								<td style="text-align: center;" th:text="${sanPham.soLuong}"></td>
 								<td style="text-align: center;" th:text="${sanPham.donGiaBan} + ' VND'">
 								</td>

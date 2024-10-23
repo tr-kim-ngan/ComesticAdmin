@@ -23,6 +23,9 @@
 					</div>
 
 					<!-- Form thêm sản phẩm -->
+					<div th:if="${errorMessage != null}" class="alert alert-danger" role="alert">
+						<span th:text="${errorMessage}"></span>
+					</div>
 					<form th:action="@{/admin/add-product}" th:object="${sanPham}" method="post"
 						enctype="multipart/form-data">
 						<div class="form-group">
@@ -80,11 +83,11 @@
 						</div>
 
 
-						<div class="form-group">
+						<!--<div class="form-group">
 							<label for="thoiDiemBan">Thời điểm bán:</label>
 							<input type="datetime-local" id="thoiDiemBan" step="1" name="thoiDiemBan"
 								class="form-control" required onclick="setCurrentDateTime()">
-						</div>
+						</div>-->
 
 
 

@@ -97,6 +97,12 @@ public class SanPhamServiceImpl implements SanPhamService {
 		return sanPhamRepository.findByTrangThai(trangThai);
 	}
 
+	@Override
+	public List<SanPham> findByMaSanPhamInAndTrangThai(List<Integer> maSanPham, Boolean trangThai) {
+		// TODO Auto-generated method stub
+		return sanPhamRepository.findByMaSanPhamInAndTrangThai(maSanPham, trangThai);
+	}
+
 	
 
 }

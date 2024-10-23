@@ -17,23 +17,24 @@ public class SanPham {
 	@Column(name = "MaSanPham")
 	private Integer maSanPham;
 
-	@Column(name = "TenSanPham", length = 100, nullable = false)
+	@Column(name = "TenSanPham", length = 200, nullable = false)
 	private String tenSanPham;
 
-	@Column(name = "MoTa", columnDefinition = "TEXT")
+	@Column(name = "MoTa", columnDefinition = "TEXT",nullable = false)
 	private String moTa;
 
-	@Column(name = "HinhAnh", length = 255)
+	@Column(name = "HinhAnh", length = 255,nullable = false)
 	private String hinhAnh;
 
-	@Column(name = "SoLuong")
+	@Column(name = "SoLuong",nullable = false)
 	private Integer soLuong;
 	
 	
 	@Column(name = "TrangThai", nullable = false)
     private boolean trangThai = true; 
 	
-	@Column(name = "DonGiaBan", precision = 8, scale = 2, nullable = false)
+	
+	@Column(name = "DonGiaBan", precision = 20, scale = 2, nullable = false)
 	private BigDecimal donGiaBan;
 
 	// quan hệ với bảng Danh Mục
@@ -62,41 +63,29 @@ public class SanPham {
 	)
 	private Set<NhaCungCap> nhaCungCaps;
 
-	
+	@ManyToMany
+	@JoinTable(name = "SanPhamCoKhuyenMai", // Tên của bảng trung gian
+	        joinColumns = @JoinColumn(name = "maSanPham"), // Khóa ngoại từ bảng SanPham
+	        inverseJoinColumns = @JoinColumn(name = "maKhuyenMai") // Khóa ngoại từ bảng KhuyenMai
+	)
+	private Set<KhuyenMai> khuyenMais;
+
 	
 	// quan hệ với bảng đơn vị tính
 	@ManyToOne
     @JoinColumn(name = "MaDonVi", nullable = false)
     private DonViTinh donViTinh;
  
-	// Phương thức để lấy đơn giá bán mới nhất
-//	@Transient
-//	public BigDecimal getLatestDonGiaBan() {
-//		if (donGiaBanHangs == null || donGiaBanHangs.isEmpty()) {
-//			return null;
-//		}
-//		Optional<DonGiaBanHang> latestDonGiaBanHang = donGiaBanHangs.stream()
-//				.max(Comparator.comparing(dgbh -> dgbh.getThoiDiem().getNgayGio()));
-//		return latestDonGiaBanHang.map(DonGiaBanHang::getDonGiaBan).orElse(null);
-//	}
+
 
 	public SanPham() {
 
 	}
 
-	
-
-
-
-
-
-//Getters và Setters
-
-
 
 	public SanPham(Integer maSanPham, String tenSanPham, String moTa, String hinhAnh, Integer soLuong,
 			boolean trangThai, BigDecimal donGiaBan, DanhMuc danhMuc, Set<ChiTietDonNhapHang> chiTietDonNhapHangs,
-			Set<NhaCungCap> nhaCungCaps, DonViTinh donViTinh) {
+			Set<NhaCungCap> nhaCungCaps, Set<KhuyenMai> khuyenMais, DonViTinh donViTinh) {
 		super();
 		this.maSanPham = maSanPham;
 		this.tenSanPham = tenSanPham;
@@ -108,18 +97,16 @@ public class SanPham {
 		this.danhMuc = danhMuc;
 		this.chiTietDonNhapHangs = chiTietDonNhapHangs;
 		this.nhaCungCaps = nhaCungCaps;
+		this.khuyenMais = khuyenMais;
 		this.donViTinh = donViTinh;
 	}
-
-
-
-
 
 
 
 	public Integer getMaSanPham() {
 		return maSanPham;
 	}
+
 
 	public void setMaSanPham(Integer maSanPham) {
 		this.maSanPham = maSanPham;
@@ -210,8 +197,17 @@ public class SanPham {
 	public void setTrangThai(boolean trangThai) {
 		this.trangThai = trangThai;
 	}
-	
-	
+
+
+
+	public Set<KhuyenMai> getKhuyenMais() {
+		return khuyenMais;
+	}
+
+	public void setKhuyenMais(Set<KhuyenMai> khuyenMais) {
+		this.khuyenMais = khuyenMais;
+	}
+
 	
 
 }
