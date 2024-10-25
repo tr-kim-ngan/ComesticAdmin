@@ -45,9 +45,6 @@ public class SupplierController {
 
 		// Kiểm tra nếu trang yêu cầu vượt quá tổng số trang, điều hướng về trang cuối
 		// cùng
-		if (page > pageNhaCungCap.getTotalPages()) {
-			page = pageNhaCungCap.getTotalPages() - 1; // Điều chỉnh để trang không vượt quá
-		}
 
 		model.addAttribute("listNhaCungCap", pageNhaCungCap.getContent());
 		model.addAttribute("currentPage", pageNhaCungCap.getNumber());
@@ -86,12 +83,11 @@ public class SupplierController {
 		model.addAttribute("user", userDetails);
 
 		// Kiểm tra số điện thoại đã tồn tại
-	    Boolean isPhoneDuplicate = nhaCungCapService.existsBySdtNhaCungCap(nhaCungCap.getSdtNhaCungCap());
+		Boolean isPhoneDuplicate = nhaCungCapService.existsBySdtNhaCungCap(nhaCungCap.getSdtNhaCungCap());
 		if (isPhoneDuplicate) {
 			model.addAttribute("error", "Số điện thoại đã tồn tại. Vui lòng nhập số khác.");
 			return "admin/supplier/add";
 		}
-		
 
 		// Kiểm tra định dạng email
 		String email = nhaCungCap.getEmailNhaCungCap();
@@ -106,18 +102,18 @@ public class SupplierController {
 		}
 
 		// Kiểm tra email có bị trùng không
-	    Boolean isEmailDuplicate = nhaCungCapService.existsByEmailNhaCungCap(email);
+		Boolean isEmailDuplicate = nhaCungCapService.existsByEmailNhaCungCap(email);
 
-	    if (isEmailDuplicate) {
-	        model.addAttribute("error", "Email đã tồn tại. Vui lòng nhập email khác.");
-	        return "admin/supplier/add";
-	    }
+		if (isEmailDuplicate) {
+			model.addAttribute("error", "Email đã tồn tại. Vui lòng nhập email khác.");
+			return "admin/supplier/add";
+		}
 
 		Boolean isCreated = nhaCungCapService.create(nhaCungCap);
 		if (isCreated) {
 			return "redirect:/admin/supplier";
 		} else {
-			model.addAttribute("error", "Error occurred while creating the supplier."); // Thêm thông báo lỗi
+			model.addAttribute("error", "Tên nhà cung cấp này đã tồn tại"); // Thêm thông báo lỗi
 			return "admin/supplier/add";
 		}
 	}
@@ -159,6 +155,7 @@ public class SupplierController {
 
 		return "redirect:/admin/supplier";
 	}
+
 
 	@PostMapping("/delete-supplier/{id}")
 	public String deleteSupplier(@PathVariable("id") Integer id) {

@@ -35,9 +35,10 @@ public interface SanPhamService {
 	Boolean existsByTenSanPham(String tenSanPham);
 	List<SanPham> findByMaSanPhamInAndTrangThai(List<Integer> maSanPham, Boolean trangThai) ;
 	
-	
-	
-	
-	
+	// Thêm phương thức tìm sản phẩm theo danh mục và trạng thái active
+	Page<SanPham> findByDanhMucAndTrangThai(Integer maDanhMuc, Boolean trangThai, Pageable pageable);
+
+	Page<SanPham> getAllActiveProducts(Pageable pageable);
+
 
 }

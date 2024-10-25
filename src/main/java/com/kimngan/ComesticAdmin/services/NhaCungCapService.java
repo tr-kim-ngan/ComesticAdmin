@@ -19,7 +19,9 @@ public interface NhaCungCapService {
 
 	Boolean update(NhaCungCap nhaCungCap);
 
-	Boolean existsByTenNhaCungCap(String tenNhaCungCap);
+	//Boolean existsByTenNhaCungCap(String tenNhaCungCap);
+	Boolean existsByTenNhaCungCapAndTrangThai(String tenNhaCungCap, Boolean trangThai);
+
 
 	// Phân trang
 	Page<NhaCungCap> findAll(Pageable pageable);
@@ -43,6 +45,8 @@ public interface NhaCungCapService {
     List<NhaCungCap> findByTrangThaiTrue();
     
     List<NhaCungCap> getAllActive();
+    
+    Optional<NhaCungCap> findByTenNhaCungCapAndTrangThaiTrue(String tenNhaCungCap);
 
 
 }

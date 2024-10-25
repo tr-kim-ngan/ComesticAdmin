@@ -46,6 +46,10 @@
 								</tr>
 							</thead>
 							<tbody>
+
+								<tr th:if="${listNhaCungCap.isEmpty()}">
+									<td colspan="8" class="text-center">Không có nhà cung cấp nào được tìm thấy</td>
+								</tr>
 								<!-- Loop through supplier list and add Số thứ tự -->
 								<tr th:each="supplier, stat : ${listNhaCungCap}">
 									<td th:text="${stat.count}"></td> <!-- Số thứ tự -->
@@ -85,7 +89,7 @@
 								<!-- Nút mũi tên trái (trước) -->
 								<li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
 									<a class="page-link"
-										th:href="${keyword != null and keyword != ''} ? @{/admin/product(page=${currentPage - 1}, keyword=${keyword})} : @{/admin/product(page=${currentPage - 1})}"
+										th:href="${keyword != null and keyword != ''} ? @{/admin/supplier(page=${currentPage - 1}, keyword=${keyword})} : @{/admin/supplier(page=${currentPage - 1})}"
 										aria-label="Previous">
 										<span aria-hidden="true">&laquo;</span>
 									</a>
@@ -95,14 +99,14 @@
 								<li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
 									th:classappend="${i == currentPage} ? 'active'">
 									<a class="page-link"
-										th:href="${keyword != null and keyword != ''} ? @{/admin/product(page=${i}, keyword=${keyword})} : @{/admin/product(page=${i})}"
+										th:href="${keyword != null and keyword != ''} ? @{/admin/supplier(page=${i}, keyword=${keyword})} : @{/admin/supplier(page=${i})}"
 										th:text="${i + 1}"></a>
 								</li>
 
 								<!-- Nút mũi tên phải (sau) -->
 								<li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
 									<a class="page-link"
-										th:href="${keyword != null and keyword != ''} ? @{/admin/product(page=${currentPage + 1}, keyword=${keyword})} : @{/admin/product(page=${currentPage + 1})}"
+										th:href="${keyword != null and keyword != ''} ? @{/admin/supplier(page=${currentPage + 1}, keyword=${keyword})} : @{/admin/supplier(page=${currentPage + 1})}"
 										aria-label="Next">
 										<span aria-hidden="true">&raquo;</span>
 									</a>

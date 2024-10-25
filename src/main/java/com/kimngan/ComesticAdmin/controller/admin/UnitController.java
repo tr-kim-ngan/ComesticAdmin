@@ -28,7 +28,8 @@ public class UnitController {
 
 	// Hiển thị danh sách đơn vị tính
 	@GetMapping("/unit")
-	public String index(Model model, @RequestParam(value = "page", defaultValue = "0") int page,
+	public String index(Model model, 
+			@RequestParam(value = "page", defaultValue = "0") int page,
 			@RequestParam(value = "size", defaultValue = "5") int size,
 			@RequestParam(value = "keyword", required = false) String keyword) {
 

@@ -76,9 +76,9 @@ public class KhuyenMaiServiceImpl implements  KhuyenMaiService{
 	    }
 
 	@Override
-	public Page<KhuyenMai> searchByName(String tenKhuyenMai, Pageable pageable) {
+	public Page<KhuyenMai> searchByName(String keyword, Pageable pageable) {
 		// TODO Auto-generated method stub
-        return khuyenMaiRepository.findByTenKhuyenMaiContainingIgnoreCaseAndTrangThaiTrue(tenKhuyenMai,true, pageable);
+        return khuyenMaiRepository.findByTenKhuyenMaiContainingIgnoreCaseAndTrangThai(keyword,true, pageable);
 	}
 
 	@Override

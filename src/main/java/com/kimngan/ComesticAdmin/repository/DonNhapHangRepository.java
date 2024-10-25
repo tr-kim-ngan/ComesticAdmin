@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.kimngan.ComesticAdmin.entity.DonNhapHang;
+import com.kimngan.ComesticAdmin.entity.KhuyenMai;
 
 public interface DonNhapHangRepository extends JpaRepository<DonNhapHang, Integer> {
 	@Query("SELECT d FROM DonNhapHang d WHERE d.trangThai = true")
@@ -16,4 +17,13 @@ public interface DonNhapHangRepository extends JpaRepository<DonNhapHang, Intege
 	Page<DonNhapHang> findByTrangThai(boolean trangThai, Pageable pageable);
 
 	Page<DonNhapHang> findByNgayNhapHang(LocalDate  ngayNhap, Pageable pageable);
+	Page<DonNhapHang> findByTrangThaiTrue(Pageable pageable);
+	
+	 // Lấy tất cả khuyến mãi có trạng thái = 1
+   // Page<KhuyenMai> findByTrangThaiTrue(Pageable pageable)
+	Page<DonNhapHang> findByNgayNhapHangBetween(LocalDate startDate, LocalDate endDate, Pageable pageable);
+
+	Page<DonNhapHang> findByNgayNhapHangContainingIgnoreCaseAndTrangThaiTrue(String keyword, Pageable pageable);
+	Page<DonNhapHang> findByNhaCungCap_TenNhaCungCapContainingIgnoreCaseAndTrangThaiTrue(String tenNhaCungCap, Pageable pageable);
+
 }

@@ -1,14 +1,33 @@
-
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
-</head>
+<head th:replace="customer/fragments/head :: head"></head>
+<!-- Thay thế bằng nội dung trong file head.html -->
+
 <body>
-    <h1>Welcome to the Home Page!</h1>
-    <p>This is your index page content.</p>
+	<header th:replace="customer/fragments/header :: header"></header>
+	<main>
+
+
+		<!-- Gọi banner từ tệp banners.html -->
+		<div th:replace="customer/fragments/banners :: banners"></div>
+		<!-- Thêm danh mục từ fragment -->
+		<div th:replace="customer/fragments/category :: category"></div>
+		<!-- Thêm sản phẩm từ fragment -->
+		
+		<div th:replace="customer/fragments/product :: product"></div>
+
+	</main>
+
+	<footer>
+		<p>© 2024 Store. All rights reserved.</p>
+	</footer>
+
+
+
+	<!--   Core JS Files   -->
+	<div th:replace="customer/fragments/script::script"> </div>
+	<!-- kết thúc JS-->
 </body>
+
 </html>

@@ -9,7 +9,7 @@ import com.kimngan.ComesticAdmin.entity.KhuyenMai;
 
 public interface KhuyenMaiRepository extends JpaRepository<KhuyenMai, Integer>{
 	// Tìm tất cả khuyến mãi với trạng thái còn hoạt động
-    Page<KhuyenMai> findByTenKhuyenMaiContainingIgnoreCaseAndTrangThaiTrue(String tenKhuyenMai,Boolean trangThai, Pageable pageable);
+    Page<KhuyenMai> findByTenKhuyenMaiContainingIgnoreCaseAndTrangThai(String tenKhuyenMai,Boolean trangThai, Pageable pageable);
 
     // Lấy tất cả khuyến mãi có trạng thái = 1
     Page<KhuyenMai> findByTrangThaiTrue(Pageable pageable);

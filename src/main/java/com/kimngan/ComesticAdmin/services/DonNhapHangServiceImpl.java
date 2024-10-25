@@ -75,4 +75,28 @@ public class DonNhapHangServiceImpl implements DonNhapHangService{
 		 return donNhapHangRepository.findByNgayNhapHang(ngayNhap, pageable);
 	}
 
+//	@Override
+//	public Page<DonNhapHang> searchByDonNhapHang(String keyword, Pageable pageable) {
+//		// TODO Auto-generated method stub
+//		 return donNhapHangRepository.findByNgayNhapHangContainingIgnoreCaseAndTrangThaiTrue(keyword, pageable);
+//	}
+
+	@Override
+	public Page<DonNhapHang> findAllActive(Pageable pageable) {
+		// TODO Auto-generated method stub
+		return donNhapHangRepository.findByTrangThaiTrue(pageable);
+	}
+
+	@Override
+	public Page<DonNhapHang> findByNgayNhapHangBetween(LocalDate startDate, LocalDate endDate, Pageable pageable) {
+		// TODO Auto-generated method stub
+		  return donNhapHangRepository.findByNgayNhapHangBetween(startDate, endDate, pageable);
+	}
+
+	@Override
+	public Page<DonNhapHang> findByNhaCungCap_Ten(String tenNhaCungCap, Pageable pageable) {
+		// TODO Auto-generated method stub
+	    return donNhapHangRepository.findByNhaCungCap_TenNhaCungCapContainingIgnoreCaseAndTrangThaiTrue(tenNhaCungCap, pageable);
+	}
+
 }

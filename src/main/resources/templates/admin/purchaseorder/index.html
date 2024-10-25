@@ -52,6 +52,10 @@
 								</tr>
 							</thead>
 							<tbody>
+								
+								<tr th:if="${listDonNhapHang.isEmpty()}">
+									<td colspan="8" class="text-center">Không có đơn nhập hàng nào được tìm thấy</td>
+								</tr>
 								<!-- Loop through purchase order list -->
 								<tr th:each="donNhapHang, stat : ${listDonNhapHang}"
 									th:if="${donNhapHang.trangThai== true}">

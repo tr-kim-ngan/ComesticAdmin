@@ -69,10 +69,9 @@ public class NhaCungCapServiceImpl implements NhaCungCapService {
 	}
 
 	@Override
-	public Boolean existsByTenNhaCungCap(String tenNhaCungCap) {
-		// TODO Auto-generated method stub
-        return nhaCungCapRepository.existsByTenNhaCungCapAndTrangThai(tenNhaCungCap, true);
-	}
+	 public Boolean existsByTenNhaCungCapAndTrangThai(String tenNhaCungCap, Boolean trangThai) {
+        return nhaCungCapRepository.existsByTenNhaCungCapAndTrangThai(tenNhaCungCap, trangThai);
+    }
 
 	@Override
 	public Page<NhaCungCap> findAll(Pageable pageable) {
@@ -83,7 +82,7 @@ public class NhaCungCapServiceImpl implements NhaCungCapService {
 	@Override
 	public Page<NhaCungCap> searchByName(String tenNhaCungCap, Pageable pageable) {
 		// TODO Auto-generated method stub
-		return nhaCungCapRepository.findByTenNhaCungCapContainingIgnoreCase(tenNhaCungCap, pageable);
+		return nhaCungCapRepository.findByTenNhaCungCapContainingIgnoreCaseAndTrangThaiTrue(tenNhaCungCap, pageable);
 	}
 
 	@Override
@@ -118,6 +117,12 @@ public class NhaCungCapServiceImpl implements NhaCungCapService {
 	public List<NhaCungCap> getAllActive() {
 		// TODO Auto-generated method stub
 		return nhaCungCapRepository.findByTrangThaiTrue(); // Lấy nhà cung cấp có trạng thái = 1 (active)
+	}
+
+	@Override
+	public Optional<NhaCungCap> findByTenNhaCungCapAndTrangThaiTrue(String tenNhaCungCap) {
+		// TODO Auto-generated method stub
+	    return nhaCungCapRepository.findByTenNhaCungCapAndTrangThaiTrue(tenNhaCungCap);
 	}
 	
 	

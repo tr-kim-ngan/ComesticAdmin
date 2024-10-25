@@ -18,10 +18,15 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
 
 	// Tìm tất cả sản phẩm với trạng thái đang hoạt động
 	Page<SanPham> findByTrangThaiTrue(Pageable pageable);
+	// Tìm tất cả sản phẩm có trạng thái active với phân trang
+   // Page<SanPham> findByTrangThaiTrue(Pageable pageable);
 
 	//List<SanPham> findByTrangThai();
 	//List<SanPham> findByTrangThai(Boolean trangThai);
 	List<SanPham> findByTrangThai(Boolean trangThai);
 	List<SanPham> findByMaSanPhamInAndTrangThai(List<Integer> maSanPham, Boolean trangThai);
+
+	Page<SanPham> findByDanhMucAndTrangThai(Integer maDanhMuc, Boolean trangThai, Pageable pageable);
+	List<SanPham> findByTrangThaiTrue();
 
 }

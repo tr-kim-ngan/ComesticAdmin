@@ -23,6 +23,7 @@ import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,15 +45,31 @@ public class PurchaseOrderController {
 
 	// Hiển thị danh sách đơn nhập hàng
 	@GetMapping("/purchaseorder")
-	public String index(Model model, @RequestParam(defaultValue = "0") int page) {
+	public String index(Model model,
+			@RequestParam(value = "page", defaultValue = "0") int page,
+	        @RequestParam(value = "size", defaultValue = "5") int size,
+	        @RequestParam(value = "keyword", required = false) String keyword) {
 
 		// Tạo đối tượng PageRequest để phân trang
-		PageRequest pageable = PageRequest.of(page, 4); // 10 đơn nhập hàng mỗi trang
-	    Page<DonNhapHang> donNhapHangPage = donNhapHangService.findByTrangThai(true, pageable);
+		 Page<DonNhapHang> pageDonNhapHang;
 
-		model.addAttribute("listDonNhapHang", donNhapHangPage.getContent());
-		model.addAttribute("totalPages", donNhapHangPage.getTotalPages());
-		model.addAttribute("currentPage", page);
+		 if (keyword != null && !keyword.isEmpty()) {
+		        // Tìm kiếm theo nhà cung cấp
+		        pageDonNhapHang = donNhapHangService.findByNhaCungCap_Ten(keyword, PageRequest.of(page, size));
+		        model.addAttribute("keyword", keyword);
+		    } else {
+		        // Hiển thị tất cả đơn nhập hàng
+		        pageDonNhapHang = donNhapHangService.findAllActive(PageRequest.of(page, size));
+		    }
+
+		    
+		    
+		    
+		    model.addAttribute("listDonNhapHang", pageDonNhapHang.getContent());
+		    model.addAttribute("currentPage", pageDonNhapHang.getNumber());
+		    model.addAttribute("totalPages", pageDonNhapHang.getTotalPages());
+		    model.addAttribute("size", size);
+		    model.addAttribute("searchAction", "/admin/purchaseorder");
 		
 		// Thêm thông tin người dùng
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

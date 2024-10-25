@@ -102,6 +102,7 @@ public class ProductController {
 
 	    // Sử dụng Map với maSanPham làm key
 	    Map<Integer, KhuyenMai> sanPhamKhuyenMaiMap = new HashMap<>();
+	    Map<SanPham, BigDecimal> sanPhamGiaSauGiamMap = new HashMap<>();
 
 	    for (SanPham sanPham : sanPhams) {
 	        // Tìm khuyến mãi cao nhất hiện tại có trạng thái true
@@ -115,10 +116,25 @@ public class ProductController {
 
 	        // Thêm vào map với maSanPham làm key
 	        sanPhamKhuyenMaiMap.put(sanPham.getMaSanPham(), highestCurrentKhuyenMai.orElse(null));
+	   
+	    
+	        // Tính giá sau khi giảm
+	        if (highestCurrentKhuyenMai.isPresent()) {
+	            BigDecimal giaGoc = sanPham.getDonGiaBan();
+	            BigDecimal phanTramGiam = highestCurrentKhuyenMai.get().getPhanTramGiamGia();
+	            BigDecimal giaSauGiam = giaGoc.subtract(giaGoc.multiply(phanTramGiam).divide(new BigDecimal(100)));
+	            sanPhamGiaSauGiamMap.put(sanPham, giaSauGiam); // Lưu giá sau khi giảm
+	        } else {
+	            sanPhamGiaSauGiamMap.put(sanPham, sanPham.getDonGiaBan()); // Không có khuyến mãi, giữ nguyên giá gốc
+	        }
+	    
+	    
 	    }
+	    
 
 	   // model.addAttribute("listSanPham", sanPhams);
 	    model.addAttribute("highestKhuyenMais", sanPhamKhuyenMaiMap); 
+	    model.addAttribute("giaSauGiams", sanPhamGiaSauGiamMap);
 	    model.addAttribute("listSanPham", sanPhams);
 		model.addAttribute("listSanPham", pageSanPham.getContent());
 		model.addAttribute("currentPage", pageSanPham.getNumber());
@@ -203,26 +219,7 @@ public class ProductController {
 		SanPham savedSanPham = sanPhamService.create(sanPham);
 		if (savedSanPham != null) {
 
-			// Kiểm tra xem ThoiDiem đã tồn tại chưa, nếu chưa thì tạo mới
-//			ThoiDiem thoiDiem = thoiDiemService.findByNgayGio(thoiDiemBan);
-//			if (thoiDiem == null) {
-//				thoiDiem = new ThoiDiem();
-//				thoiDiem.setNgayGio(thoiDiemBan);
-//				thoiDiemService.create(thoiDiem);
-//			}
 
-			// Tạo DonGiaBanHangId với MaSanPham và NgayGio
-			//DonGiaBanHangId donGiaBanHangId = new DonGiaBanHangId(savedSanPham.getMaSanPham(), thoiDiemBan);
-
-//			// Tạo đối tượng DonGiaBanHang
-//			DonGiaBanHang donGiaBanHang = new DonGiaBanHang();
-//			donGiaBanHang.setId(donGiaBanHangId);
-//			donGiaBanHang.setSanPham(savedSanPham);
-			//donGiaBanHang.setThoiDiem(thoiDiem);
-			//donGiaBanHang.setDonGiaBan(donGiaBan);
-
-			// Lưu DonGiaBanHang
-			//donGiaBanHangService.create(donGiaBanHang);
 
 			return "redirect:/admin/product";
 		} else {
@@ -359,6 +356,24 @@ public class ProductController {
 		if (sanPham == null) {
 			return "redirect:/admin/product"; // Nếu không tìm thấy, quay lại trang danh sách
 		}
+		 // Lấy ngày hiện tại
+	    LocalDate today = LocalDate.now();
+		 // Tìm khuyến mãi cao nhất hiện tại có trạng thái true
+	    Optional<KhuyenMai> highestCurrentKhuyenMai = sanPham.getKhuyenMais().stream()
+	            .filter(km -> km.getTrangThai() == true) // Chỉ lấy khuyến mãi có trạng thái true
+	            .filter(km -> !km.getNgayBatDau().toLocalDate().isAfter(today)
+	                    && !km.getNgayKetThuc().toLocalDate().isBefore(today))
+	            .max(Comparator.comparing(KhuyenMai::getPhanTramGiamGia));
+
+	    // Thêm sản phẩm và khuyến mãi cao nhất vào model
+	    model.addAttribute("sanPham", sanPham);
+	    model.addAttribute("highestKhuyenMai", highestCurrentKhuyenMai.orElse(null));
+		
+		
+		
+		
+		
+		
 
 		// Lấy danh sách các chi tiết đơn nhập hàng liên quan đến sản phẩm
 		List<ChiTietDonNhapHang> chiTietDonNhapHangList = chiTietDonNhapHangService.findBySanPham(sanPham);

@@ -28,16 +28,33 @@ public class NguoiDung {
     @ManyToOne
     @JoinColumn(name = "maQuyen", referencedColumnName ="maQuyen") // Khóa ngoại trỏ đến bảng QuyenTruyCap
     private QuyenTruyCap quyenTruyCap;
+    
+ // Quan hệ n-1 với PhieuGiamGia
+    @ManyToOne
+    @JoinColumn(name = "maPhieuGiamGia", referencedColumnName = "maPhieuGiamGia",nullable = true)
+    private PhieuGiamGia phieuGiamGia;
+    
 
     // Constructors, Getters and Setters
-    public NguoiDung() {}
+    public NguoiDung() {}    
+public NguoiDung(Integer maNguoiDung, String tenNguoiDung, String matKhau, String email, String soDienThoai,
+			QuyenTruyCap quyenTruyCap, PhieuGiamGia phieuGiamGia) {
+		super();
+		this.maNguoiDung = maNguoiDung;
+		this.tenNguoiDung = tenNguoiDung;
+		this.matKhau = matKhau;
+		this.email = email;
+		this.soDienThoai = soDienThoai;
+		this.quyenTruyCap = quyenTruyCap;
+		this.phieuGiamGia = phieuGiamGia;
+	}
 
-    public NguoiDung(String tenNguoiDung, String matKhau, String email, String soDienThoai) {
-        this.tenNguoiDung = tenNguoiDung;
-        this.matKhau = matKhau;
-        this.email = email;
-        this.soDienThoai = soDienThoai;
-    }
+//    public NguoiDung(String tenNguoiDung, String matKhau, String email, String soDienThoai) {
+//        this.tenNguoiDung = tenNguoiDung;
+//        this.matKhau = matKhau;
+//        this.email = email;
+//        this.soDienThoai = soDienThoai;
+//    }
 
     public Integer getMaNguoiDung() {
         return maNguoiDung;
@@ -85,4 +102,14 @@ public class NguoiDung {
     public void setQuyenTruyCap(QuyenTruyCap quyenTruyCap) {
         this.quyenTruyCap = quyenTruyCap;
     }
+	public PhieuGiamGia getPhieuGiamGia() {
+		return phieuGiamGia;
+	}
+	public void setPhieuGiamGia(PhieuGiamGia phieuGiamGia) {
+		this.phieuGiamGia = phieuGiamGia;
+	}
+    
+    
+    
+    
 }

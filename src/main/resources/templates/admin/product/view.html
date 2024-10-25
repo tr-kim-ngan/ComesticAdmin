@@ -28,9 +28,8 @@
 								class="btn btn-warning  mb-3">
 								Chỉnh sửa
 							</a>
-							
-							<a th:href="@{/admin/product}"
-								class="btn btn-primary mb-3">
+
+							<a th:href="@{/admin/product}" class="btn btn-primary mb-3">
 								Quay về
 							</a>
 							<p>Tên sản phẩm: <span th:text="${sanPham.tenSanPham}"></span></p>
@@ -39,6 +38,24 @@
 							<p>Mô tả: <span th:text="${sanPham.moTa}"></span></p>
 							<p>Tên đơn vị: <span th:text="${sanPham.donViTinh.tenDonVi}"></span></p>
 							<p>Tên danh mục: <span th:text="${danhMuc.tenDanhMuc}"></span></p>
+							<!-- Thông tin khuyến mãi -->
+							<div th:if="${highestKhuyenMai != null}">
+								<p>Khuyến mãi hiện tại: <span th:text="${highestKhuyenMai.tenKhuyenMai}"></span></p>
+								<p>Phần trăm khuyến mãi: <span th:text="${highestKhuyenMai.phanTramGiamGia}"></span>%
+								</p>
+								<p>Giá sau khi giảm:
+									<span
+										th:text="${sanPham.donGiaBan - (sanPham.donGiaBan * highestKhuyenMai.phanTramGiamGia / 100)}"></span>
+									VND
+								</p>
+
+							</div>
+							<div th:if="${highestKhuyenMai == null}">
+								<p>Không có khuyến mãi hiện tại.</p>
+							</div>
+
+
+
 							<!-- Hiển thị hình ảnh sản phẩm -->
 							<div>
 								<h5>Hình ảnh sản phẩm:</h5>

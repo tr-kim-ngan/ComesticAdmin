@@ -103,6 +103,17 @@ public class SanPhamServiceImpl implements SanPhamService {
 		return sanPhamRepository.findByMaSanPhamInAndTrangThai(maSanPham, trangThai);
 	}
 
+	@Override
+	public Page<SanPham> findByDanhMucAndTrangThai(Integer maDanhMuc, Boolean trangThai, Pageable pageable) {
+		// TODO Auto-generated method stub
+        return sanPhamRepository.findByDanhMucAndTrangThai(maDanhMuc, trangThai, pageable);
+	}
+
+	@Override
+	 public Page<SanPham> getAllActiveProducts(Pageable pageable) {
+        return sanPhamRepository.findByTrangThaiTrue(pageable);
+    }
+
 	
 
 }
