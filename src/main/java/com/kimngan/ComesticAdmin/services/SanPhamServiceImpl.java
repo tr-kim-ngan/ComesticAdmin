@@ -113,6 +113,27 @@ public class SanPhamServiceImpl implements SanPhamService {
 	 public Page<SanPham> getAllActiveProducts(Pageable pageable) {
         return sanPhamRepository.findByTrangThaiTrue(pageable);
     }
+//Dùng khi bạn muốn lấy tất cả sản phẩm có trạng thái active 
+	//và có trong chi tiết đơn nhập hàng (bất kể danh mục).
+	@Override
+	public Page<SanPham> getProductsInOrderDetails(Pageable pageable) {
+		// TODO Auto-generated method stub
+		return sanPhamRepository.findActiveProductsInOrderDetails(pageable);
+	}
+//Dùng khi bạn muốn lấy sản phẩm có trạng thái active theo một danh mục cụ thể 
+	//và có trong chi tiết đơn nhập hàng.
+	@Override
+	public Page<SanPham> findActiveProductsInOrderDetailsByCategory(Integer maDanhMuc, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return sanPhamRepository.findActiveProductsInOrderDetailsByCategory(maDanhMuc, pageable);
+	}
+
+	@Override
+	public List<SanPham> findByDanhMucAndTrangThai(Integer maDanhMuc, Boolean trangThai) {
+		// TODO Auto-generated method stub
+	    return sanPhamRepository.findByDanhMuc_MaDanhMucAndTrangThai(maDanhMuc, trangThai);
+	}
+
 
 	
 

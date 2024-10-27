@@ -51,6 +51,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
@@ -376,8 +377,21 @@ public class ProductController {
 		
 
 		// Lấy danh sách các chi tiết đơn nhập hàng liên quan đến sản phẩm
-		List<ChiTietDonNhapHang> chiTietDonNhapHangList = chiTietDonNhapHangService.findBySanPham(sanPham);
+		List<ChiTietDonNhapHang> chiTietDonNhapHangList = chiTietDonNhapHangService.findBySanPham(sanPham)
+				.stream()
+	            .filter(ctdnh -> ctdnh.getSoLuongNhap() > 0 && ctdnh.getDonGiaNhap().compareTo(BigDecimal.ZERO) > 0)
+	            .collect(Collectors.toList())
+				
+				
+				
+				;
 		// Kiểm tra nếu sản phẩm có trong đơn nhập hàng hay không
+		
+		
+		
+		
+		
+		
 		boolean hasDetails = !chiTietDonNhapHangList.isEmpty();
 		// Lấy thông tin danh mục và nhà cung cấp liên quan đến sản phẩm
 		DanhMuc danhMuc = sanPham.getDanhMuc();

@@ -2,6 +2,9 @@ package com.kimngan.ComesticAdmin.controller.customer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 import org.springframework.ui.Model;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +38,7 @@ public class CustomerCategoryController {
     public String productsByCategory(@PathVariable("maDanhMuc") Integer maDanhMuc, 
                                      @RequestParam(defaultValue = "0") int page, 
                                      Model model) {
-        Page<SanPham> productsByCategory = sanPhamService.findByDanhMucAndTrangThai(maDanhMuc, true, PageRequest.of(page, 10));
+        Page<SanPham> productsByCategory = sanPhamService.findActiveProductsInOrderDetailsByCategory(maDanhMuc, PageRequest.of(page, 15));
         model.addAttribute("products", productsByCategory.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", productsByCategory.getTotalPages());
@@ -47,7 +50,20 @@ public class CustomerCategoryController {
     // Hiển thị tất cả danh mục sản phẩm
     @GetMapping("/list")
     public String listCategories(Model model) {
-    	List<DanhMuc> danhMucs = danhMucService.getAll(); // Kiểm tra xem danh sách có thực sự không rỗng
+    	List<DanhMuc> danhMucs = danhMucService.getAll();
+    	
+    	  // Lọc `sanPhams` để loại bỏ giá trị null
+        for (DanhMuc category : danhMucs) {
+            category.setSanPhams(
+                category.getSanPhams().stream()
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toSet())
+            );
+        }
+    	
+    	
+    	
+    	// Kiểm tra xem danh sách có thực sự không rỗng
         model.addAttribute("danhMucs", danhMucs);
         System.out.println("Danh sách danh mục: " + danhMucs.size());
         

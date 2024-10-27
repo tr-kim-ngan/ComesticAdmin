@@ -39,6 +39,12 @@ public interface SanPhamService {
 	Page<SanPham> findByDanhMucAndTrangThai(Integer maDanhMuc, Boolean trangThai, Pageable pageable);
 
 	Page<SanPham> getAllActiveProducts(Pageable pageable);
-
+	
+	Page<SanPham> getProductsInOrderDetails(Pageable pageable);
+	// chỉ hiển thị những sản phẩm trong danh mục có trạng thái true và có trong chi tiết đơn nhập hàng
+	//Page<SanPham> findActiveProductsInCategoryWithOrderDetails(Integer maDanhMuc, Pageable pageable);
+	
+	Page<SanPham> findActiveProductsInOrderDetailsByCategory(Integer maDanhMuc, Pageable pageable);
+	List<SanPham> findByDanhMucAndTrangThai(Integer maDanhMuc, Boolean trangThai);
 
 }

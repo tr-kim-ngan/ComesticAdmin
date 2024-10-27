@@ -23,9 +23,8 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf(csrf -> csrf.disable()) // Tắt CSRF để đơn giản hóa
 				.authorizeHttpRequests((requests) -> requests
+						.requestMatchers("/", "/index", "/product/**", "/category/**").permitAll()
 						.requestMatchers("/*").permitAll()
-						// Các trang công khai và trang đăng nhập/đăng ký của khách hàng
-																					// nhập
 
 						.requestMatchers("/admin/**").hasAuthority("ADMIN")
 
@@ -56,7 +55,7 @@ public class SecurityConfig {
 	// Cấu hình bảo mật cho khách hàng
     @Bean
     public SecurityFilterChain customerSecurityFilterChain(HttpSecurity http) throws Exception {
-        http
+        http .securityMatcher("/**") 
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests((requests) -> requests
                 .requestMatchers("/", "/index", "/product/**", "/category/**", "/customer/register", "/customer/login").permitAll() // Các trang công khai

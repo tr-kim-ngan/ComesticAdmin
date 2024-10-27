@@ -31,8 +31,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
-
+import java.util.stream.Collectors;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,8 +50,8 @@ public class CustomerProductController {
 	// Trang hiển thị tất cả sản phẩm (trạng thái = 1)
 	@GetMapping("/all")
 	public String viewAllProducts(Model model, @RequestParam(defaultValue = "0") int page) {
-		Pageable pageable = PageRequest.of(page, 10); // Số lượng sản phẩm mỗi trang là 10
-		Page<SanPham> sanPhams = sanPhamService.getAllActiveProducts(pageable);
+		Pageable pageable = PageRequest.of(page, 15); // Số lượng sản phẩm mỗi trang là 10
+        Page<SanPham> sanPhams = sanPhamService.getProductsInOrderDetails(pageable);
 		List<DanhMuc> categories = danhMucService.getAll();
 		LocalDate today = LocalDate.now();
 		// Sử dụng Map với maSanPham làm key
@@ -105,15 +106,29 @@ public class CustomerProductController {
 			@RequestParam(defaultValue = "0") int page, 
 			Model model) {
 		
-		Pageable pageable = PageRequest.of(page, 10);
-	    Page<SanPham> pageSanPham  = sanPhamService.findByDanhMucAndTrangThai(maDanhMuc, true, pageable);
+		Pageable pageable = PageRequest.of(page, 15);
+	    Page<SanPham> pageSanPham = sanPhamService.findActiveProductsInOrderDetailsByCategory(maDanhMuc, pageable);
+	   
+	    // Thêm dòng log để đếm số sản phẩm có trạng thái = 1
+	   // List<SanPham> sanPhams = pageSanPham.getContent();
+	   
+	    
+	    
 	    LocalDate today = LocalDate.now();
 	   // Page<SanPham> pageSanPham = sanPhamService.findByDanhMucAndTrangThai(maDanhMuc, true, pageable);
 		// Sử dụng Map với maSanPham làm key
 		Map<Integer, KhuyenMai> sanPhamKhuyenMaiMap = new HashMap<>();
 		//Map<SanPham, BigDecimal> sanPhamGiaSauGiamMap = new HashMap<>();
 		Map<Integer, BigDecimal> sanPhamGiaSauGiamMap = new HashMap<>();
-		List<SanPham> sanPhams = pageSanPham.getContent(); 
+		List<SanPham> sanPhams = pageSanPham.getContent()
+				.stream()
+				.filter(sanPham -> !sanPham.getChiTietDonNhapHangs().isEmpty())
+		        .filter(SanPham::isTrangThai)  // Lọc chỉ những sản phẩm có trangThai = true
+		        .collect(Collectors.toList());
+		
+		
+		
+		 System.out.println("Số sản phẩm có trạng thái = 1: " + sanPhams.size());
 		// Tìm khuyến mãi và tính giá sau khi giảm cho từng sản phẩm
 		for (SanPham sanPham : sanPhams) {
 			// Tìm khuyến mãi cao nhất hiện tại có trạng thái true và trong khoảng thời gian
@@ -140,12 +155,15 @@ public class CustomerProductController {
 	        // Lưu giá sau khi giảm vào map
 	        sanPhamGiaSauGiamMap.put(sanPham.getMaSanPham(), giaSauGiam);
 	    }
+		
 		//model.addAttribute("sanPhams", sanPhams);
 		// Thêm vào model sau khi hoàn thành tính toán
 	    //model.addAttribute("sanPhamKhuyenMaiMap", sanPhamKhuyenMaiMap); // Map khuyến mãi cao nhất cho từng sản phẩm
 	   // model.addAttribute("sanPhamGiaSauGiamMap", sanPhamGiaSauGiamMap);
 
-		
+		// Lấy danh sách danh mục và lọc các giá trị null trong sanPhams của mỗi danh mục
+	    //List<DanhMuc> danhMucs = danhMucService.getAll();
+	    
 		
 
 		// Lấy danh sách danh mục

@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.kimngan.ComesticAdmin.entity.SanPham;
 
@@ -27,6 +29,34 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
 	List<SanPham> findByMaSanPhamInAndTrangThai(List<Integer> maSanPham, Boolean trangThai);
 
 	Page<SanPham> findByDanhMucAndTrangThai(Integer maDanhMuc, Boolean trangThai, Pageable pageable);
+	
 	List<SanPham> findByTrangThaiTrue();
+	
+	
+	// Tìm sản phẩm hoạt động, có hàng trong kho và có trong đơn nhập hàng
+	@Query("SELECT DISTINCT sp FROM SanPham sp JOIN sp.chiTietDonNhapHangs ctdnh WHERE sp.trangThai = true AND ctdnh.soLuongNhap > 0 AND ctdnh.trangThai = true")
 
+    Page<SanPham> findActiveProductsInOrderDetails(Pageable pageable);
+    
+	// Lấy sản phẩm active theo danh mục, có trong chi tiết đơn nhập hàng với số lượng nhập > 0
+	
+	@Query("SELECT DISTINCT sp FROM SanPham sp " +
+		       "JOIN sp.chiTietDonNhapHangs ctdnh " +
+		       "JOIN ctdnh.donNhapHang dnh " +   
+		       "WHERE sp.trangThai = true " +
+		       "AND sp.danhMuc.maDanhMuc = :maDanhMuc " +
+		       "AND ctdnh.soLuongNhap > 0 " +           // Đảm bảo có số lượng nhập
+		       "AND ctdnh.donGiaNhap > 0 " +
+		       "AND ctdnh.trangThai = true " +          // Đảm bảo chi tiết đơn nhập hàng có trạng thái true
+		       "AND dnh.tongGiaTriNhapHang > 0 " + 
+				"AND sp.danhMuc.maDanhMuc = ?1")         // Lọc theo danh mục
+		Page<SanPham> findActiveProductsInOrderDetailsByCategory(Integer maDanhMuc, Pageable pageable);
+
+	List<SanPham> findByDanhMuc_MaDanhMucAndTrangThai(Integer maDanhMuc, Boolean trangThai);
+
+	
+	
+	
+	
+	
 }
