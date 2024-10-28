@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import com.kimngan.ComesticAdmin.entity.SanPham;
@@ -46,5 +47,30 @@ public interface SanPhamService {
 	
 	Page<SanPham> findActiveProductsInOrderDetailsByCategory(Integer maDanhMuc, Pageable pageable);
 	List<SanPham> findByDanhMucAndTrangThai(Integer maDanhMuc, Boolean trangThai);
+
+	List<SanPham> searchAllCategories(String keyword, Pageable pageable);
+
+	List<SanPham> searchByCategory(Integer  categoryId, String keyword, Pageable pageable);
+
+	Page<SanPham> searchAllActiveProductsWithOrderDetails(String keyword, Pageable pageable);
+
+	Page<SanPham> searchByCategoryWithOrderDetails(Integer categoryId, String keyword, Pageable pageable);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

@@ -87,113 +87,119 @@
 					</p>
 				</div>
 				<div class="col-md-6 " style="float: right;">
-				<h3>Sản phẩm liên quan</h3>
-				<div class="related-products-list row row-cols-1 row-cols-md-1 g-4">
-					<div th:each="relatedSanPham : ${relatedSanPhams}" class="col mb-4">
+					<h3>Sản phẩm liên quan</h3>
+					<div class="related-products-list row row-cols-1 row-cols-md-1 g-4">
+						<div th:each="relatedSanPham : ${relatedSanPhams}" class="col mb-4">
 
-						<div class="product-item card h-100" style="position: relative; overflow: hidden; 
+							<div class="product-item card h-100" style="position: relative; overflow: hidden; 
 		             width: 200px;
 		            height: 320px; 
 		             margin: 10px;
 		            
 		            transition: transform 0.3s ease, box-shadow 0.3s ease;"
-							onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0px 4px 15px rgba(0, 0, 0, 0.2)';"
-							onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';
+								onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0px 4px 15px rgba(0, 0, 0, 0.2)';"
+								onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';
             
            				 ">
-							<!-- Badge Khuyến mãi cho sản phẩm liên quan -->
-							<span class="badge bg-success position-absolute m-3"
-								th:if="${relatedSanPhamKhuyenMaiMap[relatedSanPham.maSanPham] != null}"
-								th:text="'-' + ${relatedSanPhamKhuyenMaiMap[relatedSanPham.maSanPham].phanTramGiamGia} + '%'">
-							</span>
+								<!-- Badge Khuyến mãi cho sản phẩm liên quan -->
+								<span class="badge bg-success position-absolute m-3"
+									th:if="${relatedSanPhamKhuyenMaiMap[relatedSanPham.maSanPham] != null}"
+									th:text="'-' + ${relatedSanPhamKhuyenMaiMap[relatedSanPham.maSanPham].phanTramGiamGia} + '%'">
+								</span>
 
-							<!-- Wishlist Icon (Heart) -->
-							<a href="#" class="btn-wishlist heart-icon" style="position: absolute; top: 10px; right: 10px; 
+								<!-- Wishlist Icon (Heart) -->
+								<a href="#" class="btn-wishlist heart-icon" style="position: absolute; top: 10px; right: 10px; 
 			              border: 2px solid #0000; border-radius: 50%; 
 			              padding: 5px; display: flex; align-items: center; 
 			              justify-content: center; color: #ff5e5e; 
 			              background-color: #ffffff; 
 			              transition: background-color 0.3s ease, color 0.3s ease; 
 			              font-size: 1.2rem; cursor: pointer;"
-								onmouseover="this.style.backgroundColor='#ff5e5e'; this.style.color='#fff'; this.querySelector('svg').style.fill='#fff';"
-								onmouseout="this.style.backgroundColor='transparent'; this.style.color='#ff5e5e'; this.querySelector('svg').style.fill='transparent';
+									onmouseover="this.style.backgroundColor='#ff5e5e'; this.style.color='#fff'; this.querySelector('svg').style.fill='#fff';"
+									onmouseout="this.style.backgroundColor='transparent'; this.style.color='#ff5e5e'; this.querySelector('svg').style.fill='transparent';
                 
                				 ">
 
-								<svg width="24" height="24">
-									<use xlink:href="#heart"></use>
-								</svg>
-							</a>
-
-							<!-- Product Image -->
-							<figure>
-								<a th:href="@{'/product/' + ${relatedSanPham.maSanPham}}" title="Product Title">
-									<img th:src="@{'/upload/' + ${relatedSanPham.hinhAnh}}"
-										class="tab-image card-img-top" alt="Related Product Image">
+									<svg width="24" height="24">
+										<use xlink:href="#heart"></use>
+									</svg>
 								</a>
-							</figure>
 
-							<!-- Product Details -->
-							<div class="card-body">
-								<h4 th:text="${relatedSanPham.tenSanPham}" style="font-size: 0.9rem; 
+								<!-- Product Image -->
+								<figure>
+									<a th:href="@{'/product/' + ${relatedSanPham.maSanPham}}" title="Product Title">
+										<img th:src="@{'/upload/' + ${relatedSanPham.hinhAnh}}"
+											class="tab-image card-img-top" alt="Related Product Image">
+									</a>
+								</figure>
+
+								<!-- Product Details -->
+								<div class="card-body" style="padding: 5px;">
+									<h4 th:text="${relatedSanPham.tenSanPham}" style="font-size: 0.9rem; 
                     margin: 5px 0; white-space: nowrap; 
-                    overflow: hidden; text-overflow: ellipsis;">
-									Tên sản phẩm liên quan</h4>
-								<span class="qty" th:text="${relatedSanPham.donViTinh.tenDonVi}">Đơn vị</span>
-								<span class="rating">
-									<svg width="24" height="24" class="text-primary">
-										<use xlink:href="#star-solid"></use>
-									</svg> 4.5
-								</span>
-
-								<!-- Price with Promotion -->
-								<p th:if="${sanPhamKhuyenMaiMap[relatedSanPham.maSanPham] != null}" class="text-danger">
-									<span th:text="${relatedSanPham.donGiaBan} + ' VND'"
-										style="text-decoration: line-through;"></span>
-									<span th:text="${sanPhamGiaSauGiamMap[relatedSanPham.maSanPham]} + ' VND'"></span>
-								</p>
-								<p th:if="${relatedSanPhamKhuyenMaiMap[relatedSanPham.maSanPham] == null}"
-									th:text="${relatedSanPham.donGiaBan} + ' VND'"
-									style="font-weight: 600; font-family: Arial, sans-serif; color: #000;">
-									Giá gốc
-								</p>
-								<!-- Giá sau khi giảm cho sản phẩm liên quan -->
-								<!-- Hiển thị giá sau khi giảm nếu có khuyến mãi -->
-								<p th:if="${relatedSanPhamKhuyenMaiMap[relatedSanPham.maSanPham] != null}">
-									<span th:text="${relatedSanPham.donGiaBan} + ' VND'"
-										style="text-decoration: line-through; color: red;"></span>
-									<span th:text="${relatedSanPhamGiaSauGiamMap[relatedSanPham.maSanPham]} + ' VND'"
-										style="font-weight: 600; font-family: Arial, sans-serif; color: #000;">
+                    overflow: hidden; text-overflow: ellipsis;
+                    padding: 5px;
+                    
+                    ">
+										Tên sản phẩm liên quan</h4>
+									<span class="qty" th:text="${relatedSanPham.donViTinh.tenDonVi}">Đơn vị</span>
+									<span class="rating">
+										<svg width="24" height="24" class="text-primary">
+											<use xlink:href="#star-solid"></use>
+										</svg> 4.5
 									</span>
-								</p>
 
-								<!-- Số lượng sản phẩm và nút thêm vào giỏ hàng -->
-								<div class="product-quantity-container d-flex align-items-center mt-3">
-									<label for="quantity" class="form-label me-2"></label>
+									<!-- Price with Promotion -->
+									<p th:if="${sanPhamKhuyenMaiMap[relatedSanPham.maSanPham] != null}"
+										class="text-danger">
+										<span th:text="${relatedSanPham.donGiaBan} + ' VND'"
+											style="text-decoration: line-through;"></span>
+										<span
+											th:text="${sanPhamGiaSauGiamMap[relatedSanPham.maSanPham]} + ' VND'"></span>
+									</p>
+									<p th:if="${relatedSanPhamKhuyenMaiMap[relatedSanPham.maSanPham] == null}"
+										th:text="${relatedSanPham.donGiaBan} + ' VND'"
+										style="font-weight: 600; font-family: Arial, sans-serif; color: #000;">
+										Giá gốc
+									</p>
+									<!-- Giá sau khi giảm cho sản phẩm liên quan -->
+									<!-- Hiển thị giá sau khi giảm nếu có khuyến mãi -->
+									<p th:if="${relatedSanPhamKhuyenMaiMap[relatedSanPham.maSanPham] != null}">
+										<span th:text="${relatedSanPham.donGiaBan} + ' VND'"
+											style="text-decoration: line-through; color: red;"></span>
+										<span
+											th:text="${relatedSanPhamGiaSauGiamMap[relatedSanPham.maSanPham]} + ' VND'"
+											style="font-weight: 600; font-family: Arial, sans-serif; color: #000;">
+										</span>
+									</p>
 
-									<!-- Ô nhập số lượng -->
-									<input type="number" id="quantity" name="quantity" value="1" min="1"
-										class="form-control quantity-input me-3" style="width: 50px;
+									<!-- Số lượng sản phẩm và nút thêm vào giỏ hàng -->
+									<div class="product-quantity-container d-flex align-items-center mt-3">
+										<label for="quantity" class="form-label me-2"></label>
+
+										<!-- Ô nhập số lượng -->
+										<input type="number" id="quantity" name="quantity" value="1" min="1"
+											class="form-control quantity-input me-3" style="width: 50px;
 									border: 2px solid #000;" oninput="if(this.value < 1) this.value = 1;">
 
-									<!-- Nút thêm vào giỏ hàng -->
-									<button class="btn btn-warning add-to-cart">
-										<span class="iconify" data-icon="uil:shopping-cart" data-inline="false"
-											style="font-size: 1.5rem; margin-right: 5px;"></span>
+										<!-- Nút thêm vào giỏ hàng -->
+										<button class="btn btn-warning add-to-cart">
+											<span class="iconify" data-icon="uil:shopping-cart" data-inline="false"
+												style="font-size: 1.5rem; margin-right: 5px;"></span>
 
-									</button>
+										</button>
+									</div>
+
+
 								</div>
 
-
 							</div>
-
 						</div>
 					</div>
 				</div>
 			</div>
-			</div>
-			
-			
+
+
 		</div>
 
 

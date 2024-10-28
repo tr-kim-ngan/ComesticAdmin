@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -133,6 +134,36 @@ public class SanPhamServiceImpl implements SanPhamService {
 		// TODO Auto-generated method stub
 	    return sanPhamRepository.findByDanhMuc_MaDanhMucAndTrangThai(maDanhMuc, trangThai);
 	}
+
+	@Override
+	public List<SanPham> searchAllCategories(String keyword, Pageable pageable) {
+	    return sanPhamRepository.findByTenSanPhamContaining(keyword, pageable);
+	}
+
+	@Override
+	public List<SanPham> searchByCategory(Integer categoryId, String keyword, Pageable pageable) {
+		// TODO Auto-generated method stub
+	    return sanPhamRepository.findByDanhMuc_MaDanhMucAndTenSanPhamContaining(categoryId, keyword, pageable);
+	}
+
+	@Override
+	public Page<SanPham> searchAllActiveProductsWithOrderDetails(String keyword, Pageable pageable) {
+		// TODO Auto-generated method stub
+	    return sanPhamRepository.searchAllActiveProductsWithOrderDetails(keyword, pageable);
+	}
+
+	@Override
+	public Page<SanPham> searchByCategoryWithOrderDetails(Integer categoryId, String keyword, Pageable pageable) {
+		// TODO Auto-generated method stub
+	    return sanPhamRepository.searchByCategoryWithOrderDetails(categoryId, keyword, pageable);
+	}
+
+	
+	
+	
+	
+
+	
 
 
 	

@@ -44,19 +44,34 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
 		       "JOIN sp.chiTietDonNhapHangs ctdnh " +
 		       "JOIN ctdnh.donNhapHang dnh " +   
 		       "WHERE sp.trangThai = true " +
-		       "AND sp.danhMuc.maDanhMuc = :maDanhMuc " +
+		       "AND sp.danhMuc.maDanhMuc =  ?1 " +
 		       "AND ctdnh.soLuongNhap > 0 " +           // Đảm bảo có số lượng nhập
 		       "AND ctdnh.donGiaNhap > 0 " +
 		       "AND ctdnh.trangThai = true " +          // Đảm bảo chi tiết đơn nhập hàng có trạng thái true
-		       "AND dnh.tongGiaTriNhapHang > 0 " + 
-				"AND sp.danhMuc.maDanhMuc = ?1")         // Lọc theo danh mục
+		       "AND dnh.tongGiaTriNhapHang > 0 " 
+				)         // Lọc theo danh mục
 		Page<SanPham> findActiveProductsInOrderDetailsByCategory(Integer maDanhMuc, Pageable pageable);
 
 	List<SanPham> findByDanhMuc_MaDanhMucAndTrangThai(Integer maDanhMuc, Boolean trangThai);
 
 	
-	
-	
+    List<SanPham> findByTenSanPhamContaining(String keyword, Pageable pageable);
+	    
+    List<SanPham> findByDanhMuc_MaDanhMucAndTenSanPhamContaining(Integer  categoryId, String keyword, Pageable pageable);
+
+ // Tìm kiếm sản phẩm theo danh mục và trạng thái active với từ khóa
+    @Query("SELECT sp FROM SanPham sp WHERE sp.danhMuc.maDanhMuc = :categoryId AND sp.trangThai = true AND sp.tenSanPham LIKE %:keyword%")
+    List<SanPham> searchActiveProductsByCategoryAndKeyword(@Param("categoryId") Integer categoryId, @Param("keyword") String keyword, Pageable pageable);
+
+ // Tìm kiếm tất cả sản phẩm theo từ khóa, có trạng thái và có chi tiết đơn nhập hàng
+    @Query("SELECT sp FROM SanPham sp JOIN sp.chiTietDonNhapHangs ctdh WHERE sp.trangThai = true AND ctdh.soLuongNhap > 0 AND sp.tenSanPham LIKE %:keyword%")
+    Page<SanPham> searchAllActiveProductsWithOrderDetails(@Param("keyword") String keyword, Pageable pageable);
+
+    // Tìm kiếm sản phẩm theo danh mục, từ khóa, có trạng thái và có chi tiết đơn nhập hàng
+    @Query("SELECT sp FROM SanPham sp JOIN sp.chiTietDonNhapHangs ctdh WHERE sp.trangThai = true AND sp.danhMuc.maDanhMuc = :categoryId AND ctdh.soLuongNhap > 0 AND sp.tenSanPham LIKE %:keyword%")
+    Page<SanPham> searchByCategoryWithOrderDetails(@Param("categoryId") Integer categoryId, @Param("keyword") String keyword, Pageable pageable);
+
+    
 	
 	
 }

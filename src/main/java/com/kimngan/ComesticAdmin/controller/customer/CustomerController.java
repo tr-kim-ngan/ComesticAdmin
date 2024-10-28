@@ -46,6 +46,8 @@ public class CustomerController {
 	// Trang index, có thể truy cập không cần đăng nhập
 	@GetMapping({ "/", "/index" })
 	public String homeOrIndex(Model model, @RequestParam(defaultValue = "0") int page) {
+		
+		
 		Pageable pageable = PageRequest.of(page, 15);
 		Page<SanPham> sanPhams = sanPhamService.getProductsInOrderDetails(pageable);
 		LocalDate today = LocalDate.now();
@@ -75,7 +77,7 @@ public class CustomerController {
 		}
 		// Lấy danh sách danh mục
 		List<DanhMuc> danhMucs = danhMucService.getAll(); // Giả định rằng bạn có phương thức này
-
+		List<DanhMuc> categories = danhMucService.getAll();
 		// Tự động chia danh mục thành 2 nhóm: hiển thị và ẩn
 		int maxVisible = 4; // Số lượng danh mục hiển thị ban đầu
 		List<DanhMuc> visibleDanhMucs = danhMucs.subList(0, Math.min(danhMucs.size(), maxVisible));
@@ -91,6 +93,7 @@ public class CustomerController {
 		// Thêm vào model để sử dụng trong view
 		model.addAttribute("visibleDanhMucs", visibleDanhMucs);
 		model.addAttribute("hiddenDanhMucs", hiddenDanhMucs);
+		  model.addAttribute("categories", categories);
 
 		System.out.println("Danh sách danh mục: " + danhMucs.size());
 

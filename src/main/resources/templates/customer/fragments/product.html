@@ -235,7 +235,8 @@
 							th:aria-labelledby="'nav-' + ${category.maDanhMuc} + '-tab'">
 							<div
 								class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
-								<div class="col" th:each="sanPham : ${category.sanPhams}" th:if="${sanPham.trangThai == true 
+								<div class="col" th:each="sanPham : ${category.sanPhams}" 
+								th:if="${sanPham.trangThai == true 
 								  and !sanPham.chiTietDonNhapHangs.isEmpty()
 								
 								  and sanPham.chiTietDonNhapHangs.?[donNhapHang.tongGiaTriNhapHang > 0 

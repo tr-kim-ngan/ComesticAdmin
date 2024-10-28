@@ -75,36 +75,36 @@
 		<div class="col-sm-4 col-lg-3 text-center text-sm-start">
 			<div class="main-logo">
 				<a th:href="@{/index}">
-					<img th:src="@{/fe/images/logo1.png}"
-					style="margin-top: 0px;"
-					 alt="logo" class="img-fluid">
+					<img th:src="@{/fe/images/logo1.png}" style="margin-top: 0px;" alt="logo" class="img-fluid">
 				</a>
 			</div>
 		</div>
 
 		<div class="col-sm-6 offset-sm-2 offset-md-0 col-lg-5 d-none d-lg-block">
 			<div class="search-bar row bg-light p-2 my-2 rounded-4">
+				<!-- Dropdown danh mục -->
 				<div class="col-md-4 d-none d-md-block">
-					<select class="form-select border-0 bg-transparent">
-						<option>All Categories</option>
-						<option>Groceries</option>
-						<option>Drinks</option>
-						<option>Chocolates</option>
+					<select class="form-select border-0 bg-transparent" id="categorySelect" name="category"
+						>
+						<option value="-1">Tất cả danh mục</option>
+						<option th:each="category : ${categories}" th:value="${category.maDanhMuc}"
+							th:text="${category.tenDanhMuc}"></option>
 					</select>
 				</div>
+
+				<!-- Biểu mẫu tìm kiếm -->
 				<div class="col-11 col-md-7">
-					<form id="search-form" class="text-center" th:action="@{/index}" method="post">
-						<input type="text" class="form-control border-0 bg-transparent" placeholder="Tìm kiếm" />
+					<form id="search-form" th:action="@{/category/search}" method="get">
+						<input type="text" name="keyword" class="form-control border-0 bg-transparent"
+							placeholder="Tìm kiếm" />
+						<button type="submit">Tìm kiếm</button>
 					</form>
-				</div>
-				<div class="col-1">
-					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-						<path fill="currentColor"
-							d="M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 7-7a7 7 0 0 1-7 7Z" />
-					</svg>
 				</div>
 			</div>
 		</div>
+
+
+
 
 		<div
 			class="col-sm-8 col-lg-4 d-flex justify-content-end gap-5 align-items-center mt-4 mt-sm-0 justify-content-center justify-content-sm-end">
@@ -224,6 +224,7 @@
 							<div class="offcanvas-body">
 
 								<select class="filter-categories border-0 mb-0 me-5">
+
 									<option>Chọn danh mục</option>
 									<option>Chăm sóc da</option>
 									<option>Trang điểm</option>
@@ -240,13 +241,13 @@
 										<a th:href="@{/cua-hang}" class="nav-link">Cửa hàng</a>
 									</li>
 									<li class="nav-item">
-										<a th:href="@{/san-pham}" class="nav-link">Sản phẩm</a>
+										<a th:href="@{/category/all}" class="nav-link">Sản phẩm</a>
 									</li>
-									
+
 									<li class="nav-item">
 										<a th:href="@{/lien-he}" class="nav-link">Liên hệ</a>
 									</li>
-									
+
 								</ul>
 
 							</div>
@@ -254,4 +255,17 @@
 						</div>
 				</div>
 			</div>
+
+			<script>
+				function submitSearchForm() {
+					document.getElementById('search-form').submit();
+				}
+			</script>
+
+
+
+
+
+
+
 		</div>

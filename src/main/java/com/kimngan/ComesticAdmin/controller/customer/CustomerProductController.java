@@ -99,92 +99,78 @@ public class CustomerProductController {
 		return "index"; // Hiển thị sản phẩm trên trang index
 	}
 
-	// Trang hiển thị sản phẩm theo danh mục
-	@GetMapping("/category/{maDanhMuc}")
-	public String viewProductsByCategory(
-			@PathVariable("maDanhMuc") Integer maDanhMuc,
-			@RequestParam(defaultValue = "0") int page, 
-			Model model) {
-		
-		Pageable pageable = PageRequest.of(page, 15);
-	    Page<SanPham> pageSanPham = sanPhamService.findActiveProductsInOrderDetailsByCategory(maDanhMuc, pageable);
-	   
-	    // Thêm dòng log để đếm số sản phẩm có trạng thái = 1
-	   // List<SanPham> sanPhams = pageSanPham.getContent();
-	   
-	    
-	    
-	    LocalDate today = LocalDate.now();
-	   // Page<SanPham> pageSanPham = sanPhamService.findByDanhMucAndTrangThai(maDanhMuc, true, pageable);
-		// Sử dụng Map với maSanPham làm key
-		Map<Integer, KhuyenMai> sanPhamKhuyenMaiMap = new HashMap<>();
-		//Map<SanPham, BigDecimal> sanPhamGiaSauGiamMap = new HashMap<>();
-		Map<Integer, BigDecimal> sanPhamGiaSauGiamMap = new HashMap<>();
-		List<SanPham> sanPhams = pageSanPham.getContent()
-				.stream()
-				.filter(sanPham -> !sanPham.getChiTietDonNhapHangs().isEmpty())
-		        .filter(SanPham::isTrangThai)  // Lọc chỉ những sản phẩm có trangThai = true
-		        .collect(Collectors.toList());
-		
-		
-		
-		 System.out.println("Số sản phẩm có trạng thái = 1: " + sanPhams.size());
-		// Tìm khuyến mãi và tính giá sau khi giảm cho từng sản phẩm
-		for (SanPham sanPham : sanPhams) {
-			// Tìm khuyến mãi cao nhất hiện tại có trạng thái true và trong khoảng thời gian
-			// hợp lệ
-			Optional<KhuyenMai> highestCurrentKhuyenMai = sanPham.getKhuyenMais().stream()
-					.filter(km -> km.getTrangThai()) // Chỉ lấy khuyến mãi có trạng thái true
-					.filter(km -> !km.getNgayBatDau().toLocalDate().isAfter(today)
-							&& !km.getNgayKetThuc().toLocalDate().isBefore(today)) // Chỉ lấy khuyến mãi còn hạn
-					.max(Comparator.comparing(KhuyenMai::getPhanTramGiamGia)); // Lấy khuyến mãi có tỷ lệ giảm giá cao
-																				// nhất
-
-
-	        BigDecimal giaSauGiam = sanPham.getDonGiaBan();
-	        // Tính giá sau khi giảm
-	        if (highestCurrentKhuyenMai.isPresent()) {
-	            BigDecimal phanTramGiam = highestCurrentKhuyenMai.get().getPhanTramGiamGia();
-	            giaSauGiam = giaSauGiam.subtract(giaSauGiam.multiply(phanTramGiam).divide(BigDecimal.valueOf(100)));
-	            // Lưu khuyến mãi vào map
-	            sanPhamKhuyenMaiMap.put(sanPham.getMaSanPham(), highestCurrentKhuyenMai.get());
-	        } else {
-	            sanPhamKhuyenMaiMap.put(sanPham.getMaSanPham(), null); // Không có khuyến mãi, để trống
-	        }
-
-	        // Lưu giá sau khi giảm vào map
-	        sanPhamGiaSauGiamMap.put(sanPham.getMaSanPham(), giaSauGiam);
-	    }
-		
-		//model.addAttribute("sanPhams", sanPhams);
-		// Thêm vào model sau khi hoàn thành tính toán
-	    //model.addAttribute("sanPhamKhuyenMaiMap", sanPhamKhuyenMaiMap); // Map khuyến mãi cao nhất cho từng sản phẩm
-	   // model.addAttribute("sanPhamGiaSauGiamMap", sanPhamGiaSauGiamMap);
-
-		// Lấy danh sách danh mục và lọc các giá trị null trong sanPhams của mỗi danh mục
-	    //List<DanhMuc> danhMucs = danhMucService.getAll();
-	    
-		
-
-		// Lấy danh sách danh mục
-		List<DanhMuc> danhMucs = danhMucService.getAll();
-		int maxVisible = 4;
-		List<DanhMuc> visibleDanhMucs = danhMucs.subList(0, Math.min(danhMucs.size(), maxVisible));
-		List<DanhMuc> hiddenDanhMucs = danhMucs.size() > maxVisible ? danhMucs.subList(maxVisible, danhMucs.size())
-				: new ArrayList<>();
-		model.addAttribute("visibleDanhMucs", visibleDanhMucs);
-		model.addAttribute("hiddenDanhMucs", hiddenDanhMucs);
-		model.addAttribute("maDanhMuc", maDanhMuc);
-		
-		model.addAttribute("sanPhams", sanPhams); // Truyền danh sách sản phẩm vào model
-	    model.addAttribute("sanPhamKhuyenMaiMap", sanPhamKhuyenMaiMap); 
-	    model.addAttribute("sanPhamGiaSauGiamMap", sanPhamGiaSauGiamMap); 
-	    
-	    model.addAttribute("categories", danhMucs); // Truyền danh mục vào model
-	    model.addAttribute("currentPage", page);
-	    model.addAttribute("totalPages", pageSanPham.getTotalPages());
-		
-
-		return "index"; // Trả về trang index
-	}
+//	// Trang hiển thị sản phẩm theo danh mục
+//	@GetMapping("/category/{maDanhMuc}")
+//	public String viewProductsByCategory(
+//			@PathVariable("maDanhMuc") Integer maDanhMuc,
+//			@RequestParam(defaultValue = "0") int page, 
+//			Model model) {
+//		
+//		Pageable pageable = PageRequest.of(page, 15);
+//	    Page<SanPham> pageSanPham = sanPhamService.findActiveProductsInOrderDetailsByCategory(maDanhMuc, pageable);
+//	   
+//
+//	    
+//	    LocalDate today = LocalDate.now();
+//		// Sử dụng Map với maSanPham làm key
+//		Map<Integer, KhuyenMai> sanPhamKhuyenMaiMap = new HashMap<>();
+//		Map<Integer, BigDecimal> sanPhamGiaSauGiamMap = new HashMap<>();
+//		List<SanPham> sanPhams = pageSanPham.getContent()
+//				.stream()
+//				.filter(sanPham -> !sanPham.getChiTietDonNhapHangs().isEmpty())
+//		        .filter(SanPham::isTrangThai)  // Lọc chỉ những sản phẩm có trangThai = true
+//		        .collect(Collectors.toList());
+//		
+//		
+//		
+//		 System.out.println("Số sản phẩm có trạng thái = 1: " + sanPhams.size());
+//		// Tìm khuyến mãi và tính giá sau khi giảm cho từng sản phẩm
+//		for (SanPham sanPham : sanPhams) {
+//			// Tìm khuyến mãi cao nhất hiện tại có trạng thái true và trong khoảng thời gian
+//			// hợp lệ
+//			Optional<KhuyenMai> highestCurrentKhuyenMai = sanPham.getKhuyenMais().stream()
+//					.filter(km -> km.getTrangThai()) // Chỉ lấy khuyến mãi có trạng thái true
+//					.filter(km -> !km.getNgayBatDau().toLocalDate().isAfter(today)
+//							&& !km.getNgayKetThuc().toLocalDate().isBefore(today)) // Chỉ lấy khuyến mãi còn hạn
+//					.max(Comparator.comparing(KhuyenMai::getPhanTramGiamGia)); // Lấy khuyến mãi có tỷ lệ giảm giá cao
+//																				// nhất
+//
+//
+//	        BigDecimal giaSauGiam = sanPham.getDonGiaBan();
+//	        // Tính giá sau khi giảm
+//	        if (highestCurrentKhuyenMai.isPresent()) {
+//	            BigDecimal phanTramGiam = highestCurrentKhuyenMai.get().getPhanTramGiamGia();
+//	            giaSauGiam = giaSauGiam.subtract(giaSauGiam.multiply(phanTramGiam).divide(BigDecimal.valueOf(100)));
+//	            // Lưu khuyến mãi vào map
+//	            sanPhamKhuyenMaiMap.put(sanPham.getMaSanPham(), highestCurrentKhuyenMai.get());
+//	        } else {
+//	            sanPhamKhuyenMaiMap.put(sanPham.getMaSanPham(), null); // Không có khuyến mãi, để trống
+//	        }
+//
+//	        // Lưu giá sau khi giảm vào map
+//	        sanPhamGiaSauGiamMap.put(sanPham.getMaSanPham(), giaSauGiam);
+//	    }
+//		System.out.println("Danh sách sản phẩm: " + pageSanPham.getContent().size());
+//
+//		// Lấy danh sách danh mục
+//		List<DanhMuc> danhMucs = danhMucService.getAll();
+//		int maxVisible = 4;
+//		List<DanhMuc> visibleDanhMucs = danhMucs.subList(0, Math.min(danhMucs.size(), maxVisible));
+//		List<DanhMuc> hiddenDanhMucs = danhMucs.size() > maxVisible ? danhMucs.subList(maxVisible, danhMucs.size())
+//				: new ArrayList<>();
+//		model.addAttribute("visibleDanhMucs", visibleDanhMucs);
+//		model.addAttribute("hiddenDanhMucs", hiddenDanhMucs);
+//		model.addAttribute("maDanhMuc", maDanhMuc);
+//		
+//		model.addAttribute("sanPhams", sanPhams); // Truyền danh sách sản phẩm vào model
+//	    model.addAttribute("sanPhamKhuyenMaiMap", sanPhamKhuyenMaiMap); 
+//	    model.addAttribute("sanPhamGiaSauGiamMap", sanPhamGiaSauGiamMap); 
+//	    
+//	    model.addAttribute("categories", danhMucs); // Truyền danh mục vào model
+//	    model.addAttribute("currentPage", page);
+//	    model.addAttribute("totalPages", pageSanPham.getTotalPages());
+//		
+//
+//		return "customer/categoryProduct"; // Trả về trang index
+//	}
 }
