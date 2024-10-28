@@ -68,10 +68,12 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
     Page<SanPham> searchAllActiveProductsWithOrderDetails(@Param("keyword") String keyword, Pageable pageable);
 
     // Tìm kiếm sản phẩm theo danh mục, từ khóa, có trạng thái và có chi tiết đơn nhập hàng
-    @Query("SELECT sp FROM SanPham sp JOIN sp.chiTietDonNhapHangs ctdh WHERE sp.trangThai = true AND sp.danhMuc.maDanhMuc = :categoryId AND ctdh.soLuongNhap > 0 AND sp.tenSanPham LIKE %:keyword%")
+    //@Query("SELECT sp FROM SanPham sp JOIN sp.chiTietDonNhapHangs ctdh WHERE sp.trangThai = true AND sp.danhMuc.maDanhMuc = :categoryId AND ctdh.soLuongNhap > 0 AND sp.tenSanPham LIKE %:keyword%")
+    //Page<SanPham> searchByCategoryWithOrderDetails(@Param("categoryId") Integer categoryId, @Param("keyword") String keyword, Pageable pageable);
+//    @Query("SELECT sp FROM SanPham sp JOIN sp.danhMuc dm JOIN sp.chiTietDonNhapHangs ctdh WHERE sp.trangThai = true AND dm.maDanhMuc = :categoryId AND ctdh.soLuongNhap > 0 AND (:keyword IS NULL OR sp.tenSanPham LIKE %:keyword%)")
+//      Page<SanPham> searchByCategoryWithOrderDetails(@Param("categoryId") Integer categoryId, @Param("keyword") String keyword, Pageable pageable);
+
+    @Query("SELECT sp FROM SanPham sp JOIN sp.chiTietDonNhapHangs ctdh WHERE sp.trangThai = true AND sp.danhMuc.maDanhMuc = :categoryId AND ctdh.soLuongNhap > 0 AND (:keyword IS NULL OR :keyword = '' OR LOWER(sp.tenSanPham) LIKE LOWER(CONCAT('%', :keyword, '%')))")
     Page<SanPham> searchByCategoryWithOrderDetails(@Param("categoryId") Integer categoryId, @Param("keyword") String keyword, Pageable pageable);
 
-    
-	
-	
 }

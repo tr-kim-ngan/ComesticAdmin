@@ -82,26 +82,27 @@
 
 		<div class="col-sm-6 offset-sm-2 offset-md-0 col-lg-5 d-none d-lg-block">
 			<div class="search-bar row bg-light p-2 my-2 rounded-4">
-				<!-- Dropdown danh mục -->
-				<div class="col-md-4 d-none d-md-block">
-					<select class="form-select border-0 bg-transparent" id="categorySelect" name="category"
-						>
-						<option value="-1">Tất cả danh mục</option>
-						<option th:each="category : ${categories}" th:value="${category.maDanhMuc}"
-							th:text="${category.tenDanhMuc}"></option>
-					</select>
-				</div>
-
 				<!-- Biểu mẫu tìm kiếm -->
-				<div class="col-11 col-md-7">
-					<form id="search-form" th:action="@{/category/search}" method="get">
+				<form id="search-form" th:action="@{/category/search}" method="get" class="row">
+					<!-- Dropdown danh mục -->
+					<div class="col-md-4 d-none d-md-block">
+						<select class="form-select border-0 bg-transparent" id="categorySelect" name="category">
+							<option value="-1">Tất cả danh mục</option>
+							<option th:each="category : ${categories}" th:value="${category.maDanhMuc}"
+								th:text="${category.tenDanhMuc}"></option>
+						</select>
+					</div>
+					<div class="col-11 col-md-7">
 						<input type="text" name="keyword" class="form-control border-0 bg-transparent"
 							placeholder="Tìm kiếm" />
-						<button type="submit">Tìm kiếm</button>
-					</form>
-				</div>
+					</div>
+					<div class="col-1 col-md-1">
+						<button type="submit" class="btn btn-primary">Tìm kiếm</button>
+					</div>
+				</form>
 			</div>
 		</div>
+
 
 
 
@@ -256,11 +257,7 @@
 				</div>
 			</div>
 
-			<script>
-				function submitSearchForm() {
-					document.getElementById('search-form').submit();
-				}
-			</script>
+			
 
 
 
