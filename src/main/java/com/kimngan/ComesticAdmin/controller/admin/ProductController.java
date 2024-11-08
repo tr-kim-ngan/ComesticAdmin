@@ -63,10 +63,7 @@ public class ProductController {
 	private DanhMucService danhMucService;
 	@Autowired
 	private StorageService storageService;
-	//@Autowired
-	//private ThoiDiemService thoiDiemService;
-	//@Autowired
-	//private DonGiaBanHangService donGiaBanHangService;
+	
 	@Autowired
 	private NhaCungCapService nhaCungCapService;
 	@Autowired

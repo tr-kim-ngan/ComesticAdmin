@@ -41,11 +41,11 @@ public class SanPham {
 	@ManyToOne
 	@JoinColumn(name = "maDanhMuc", referencedColumnName = "maDanhMuc")
 	private DanhMuc danhMuc;
-	// quan hệ với đơn giá
+	// quan hệ với Yêu thích
 
-//	// xây dựng với Đơn giá bán hàng
-//	@OneToMany(mappedBy = "sanPham", cascade = CascadeType.ALL, fetch = FetchType.LAZY,orphanRemoval = true)
-//	private Set<DonGiaBanHang> donGiaBanHangs;
+	@OneToMany(mappedBy = "sanPham", cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<YeuThich> yeuThichs;
+
 	
 	// quan hệ với bảng Chi tiết đơn nhập hàng
 	@OneToMany(mappedBy = "sanPham",cascade = CascadeType.ALL, fetch = FetchType.LAZY,orphanRemoval = true)
@@ -83,9 +83,13 @@ public class SanPham {
 	}
 
 
+	
+
+
 	public SanPham(Integer maSanPham, String tenSanPham, String moTa, String hinhAnh, Integer soLuong,
-			boolean trangThai, BigDecimal donGiaBan, DanhMuc danhMuc, Set<ChiTietDonNhapHang> chiTietDonNhapHangs,
-			Set<NhaCungCap> nhaCungCaps, Set<KhuyenMai> khuyenMais, DonViTinh donViTinh) {
+			boolean trangThai, BigDecimal donGiaBan, DanhMuc danhMuc, Set<YeuThich> yeuThichs,
+			Set<ChiTietDonNhapHang> chiTietDonNhapHangs, Set<NhaCungCap> nhaCungCaps, Set<KhuyenMai> khuyenMais,
+			DonViTinh donViTinh) {
 		super();
 		this.maSanPham = maSanPham;
 		this.tenSanPham = tenSanPham;
@@ -95,11 +99,14 @@ public class SanPham {
 		this.trangThai = trangThai;
 		this.donGiaBan = donGiaBan;
 		this.danhMuc = danhMuc;
+		this.yeuThichs = yeuThichs;
 		this.chiTietDonNhapHangs = chiTietDonNhapHangs;
 		this.nhaCungCaps = nhaCungCaps;
 		this.khuyenMais = khuyenMais;
 		this.donViTinh = donViTinh;
 	}
+
+
 
 
 
@@ -206,6 +213,13 @@ public class SanPham {
 
 	public void setKhuyenMais(Set<KhuyenMai> khuyenMais) {
 		this.khuyenMais = khuyenMais;
+	}
+	public Set<YeuThich> getYeuThichs() {
+		return yeuThichs;
+	}
+
+	public void setYeuThichs(Set<YeuThich> yeuThichs) {
+		this.yeuThichs = yeuThichs;
 	}
 
 	
