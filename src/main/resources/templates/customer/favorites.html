@@ -8,12 +8,13 @@
 
 	<main class="container">
 		<h2 class="my-5">Danh sách yêu thích</h2>
-		<div class="row row-cols-1 row-cols-md-3 g-4">
+		<div class="row row-cols-1 row-cols-md-3 g-4" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0px;">
 			<div th:each="sanPham : ${yeuThichList}" class="col">
-				<div class="card h-100" style="position: relative; border: none;">
+				<div class="card h-100" style="position: relative; border: none; width: 240px; height: 300px; margin: 0 auto; transform: scale(1);">
 					<!-- Badge Khuyến mãi -->
 
-					<div class="card-body" style="min-height: 350px; 
+					<div class="card-body" style="min-height: 250px; 
+					
 								display: flex; 
 								flex-direction: column; 
 								justify-content: space-between; 

@@ -1,21 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{customer/fragments/head :: head}">
-
-
-
-
-
-</head>
+<head th:replace="customer/fragments/head :: head"></head>
 
 <body>
-	<header th:replace="~{customer/fragments/header :: header}">
+	<header th:replace="customer/fragments/header :: header"></header>
 
-
-	</header>
 	<main>
-
 		<div class="container product-container mt-5">
 			<div class="row">
 				<!-- Hình ảnh sản phẩm -->
@@ -26,9 +17,7 @@
 				<!-- Thông tin sản phẩm -->
 				<div class="col-md-6 product-info">
 					<h2 th:text="${sanPham.tenSanPham}">Tên sản phẩm</h2>
-					<!--<p th:text="${sanPham.moTa}">Mô tả sản phẩm...</p>-->
 
-					<!-- Hiển thị thông tin khuyến mãi -->
 					<!-- Hiển thị thông tin khuyến mãi -->
 					<div class="promotion-info" th:if="${sanPhamKhuyenMaiMap[sanPham.maSanPham] != null}">
 						<span class="discount-label">Giảm giá: </span>
@@ -36,7 +25,6 @@
 							th:text="${sanPhamKhuyenMaiMap[sanPham.maSanPham].phanTramGiamGia} + '%'">
 						</span>
 					</div>
-
 
 					<!-- Hiển thị giá sản phẩm -->
 					<div class="product-price mt-2">
@@ -52,75 +40,92 @@
 							style="color:#e74c3c; font-weight: bold; font-family: 'Arial', sans-serif; letter-spacing: 0.5px; font-size: 1.2em;"
 							th:text="${sanPham.donGiaBan} + ' VND'"></span>
 					</div>
-
-
+					<span class="qty" th:text="${sanPham.donViTinh.tenDonVi}">Đơn vị tính</span>
 
 					<!-- Số lượng sản phẩm -->
 					<div class="product-quantity mt-3">
-						<label for="quantity" class="form-label">Số lượng:</label>
+						<label for="quantity" class="form-label" style="color: black;">Số lượng:</label>
 						<input type="number" id="quantity" name="quantity" value="1" min="1" class="form-control w-25"
 							oninput="if(this.value < 1) this.value = 1;">
 					</div>
 
 					<!-- Nút thêm vào giỏ hàng và yêu thích -->
-					<div class="mt-3">
-						<button class="btn btn-warning add-to-cart me-2">
-							Thêm vào giỏ hàng <!--🛒-->
+					<div class="mt-3 d-flex align-items-center">
+						<button class="btn btn-primary add-to-cart me-2" style="transition: none;">
+							Thêm vào giỏ hàng
 							<span class="iconify" data-icon="uil:shopping-cart" data-inline="false"></span>
 						</button>
-						<button class="btn btn-outline-danger btn-wishlist">
-							Yêu thích
-							<span class="iconify" data-icon="uil:heart" data-inline="false"></span>
-						</button>
+						<!-- Nút yêu thích dành cho sản phẩm -->
+						<a href="javascript:void(0);"
+							class="btn-wishlist ms-2 d-flex align-items-center justify-content-center"
+							th:if="${#authentication.name == 'anonymousUser'}" data-bs-toggle="offcanvas"
+							data-bs-target="#offcanvasLoginAlert"
+							style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background-color: white; color: black; border: 2px solid #ccc; transition: none;">
+							<svg width="24" height="24">
+								<use xlink:href="#heart"></use>
+							</svg>
+						</a>
+						<!-- Nút yêu thích dành cho chi tiết sản phẩm -->
+						<a href="javascript:void(0);" th:if="${#authentication.name != 'anonymousUser'}"
+							th:onclick="'toggleFavorite(' + ${sanPham.maSanPham} + ')'"
+							th:classappend="${favoriteProductIds.contains(sanPham.maSanPham) ? 'btn-wishlist-liked' : 'btn-wishlist'}"
+							th:data-product-id="${sanPham.maSanPham}"
+							th:data-liked="${favoriteProductIds.contains(sanPham.maSanPham)}"
+							class="btn-wishlist ms-2 d-flex align-items-center justify-content-center"
+							th:style="${favoriteProductIds.contains(sanPham.maSanPham)} ? 
+              'width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background-color: #e74c3c; color: white; border: 2px solid #ccc; transition: none;' : 
+              'width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background-color: white; color: black; border: 2px solid #ccc; transition: none;'">
+							<svg class="heart-icon" width="24" height="24">
+								<use xlink:href="#heart"></use>
+							</svg>
+						</a>
+
 					</div>
 				</div>
-
 			</div>
 
 			<!-- Mô tả chi tiết sản phẩm -->
 			<div class="row mt-5">
 				<div class="col-md-6">
 					<h3>Mô tả chi tiết sản phẩm</h3>
-					<p th:text="${sanPham.moTa}" style="text-align: justify;">
-						<!-- Mô tả chi tiết của sản phẩm sẽ hiển thị ở đây -->
-
-					</p>
+					<p th:text="${sanPham.moTa}" style="text-align: justify;"></p>
 				</div>
-				<div class="col-md-6 " style="float: right;">
+				<!-- Sản phẩm liên quan -->
+				<div class="col-md-6">
 					<h3>Sản phẩm liên quan</h3>
-					<div class="related-products-list row row-cols-1 row-cols-md-1 g-4">
-						<div th:each="relatedSanPham : ${relatedSanPhams}" class="col mb-4">
-
-							<div class="product-item card h-100" style="position: relative; overflow: hidden; 
-		             width: 200px;
-		            height: 320px; 
-		             margin: 10px;
-		            
-		            transition: transform 0.3s ease, box-shadow 0.3s ease;"
-								onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0px 4px 15px rgba(0, 0, 0, 0.2)';"
-								onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';
-            
-           				 ">
-								<!-- Badge Khuyến mãi cho sản phẩm liên quan -->
+					<div class="related-products-list row row-cols-1 row-cols-md-3 g-4">
+						<div th:each="relatedSanPham : ${relatedSanPhams}" class="col mb-4" style="border-radius: 30px;
+						box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+						transition: transform 0.2s ease, box-shadow 0.3s ease;  "
+							onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 16px rgba(0, 0, 0, 0.3)';"
+							onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 6px rgba(0, 0, 0, 0.1)';">
+							<div class="product-item card h-100 position-relative">
+								<!-- Badge Khuyến mãi -->
 								<span class="badge bg-success position-absolute m-3"
 									th:if="${relatedSanPhamKhuyenMaiMap[relatedSanPham.maSanPham] != null}"
 									th:text="'-' + ${relatedSanPhamKhuyenMaiMap[relatedSanPham.maSanPham].phanTramGiamGia} + '%'">
 								</span>
-
-								<!-- Wishlist Icon (Heart) -->
-								<a href="#" class="btn-wishlist heart-icon" style="position: absolute; top: 10px; right: 10px; 
-			              border: 2px solid #0000; border-radius: 50%; 
-			              padding: 5px; display: flex; align-items: center; 
-			              justify-content: center; color: #ff5e5e; 
-			              background-color: #ffffff; 
-			              transition: background-color 0.3s ease, color 0.3s ease; 
-			              font-size: 1.2rem; cursor: pointer;"
-									onmouseover="this.style.backgroundColor='#ff5e5e'; this.style.color='#fff'; this.querySelector('svg').style.fill='#fff';"
-									onmouseout="this.style.backgroundColor='transparent'; this.style.color='#ff5e5e'; this.querySelector('svg').style.fill='transparent';
-                
-               				 ">
-
+								<!-- Nút yêu thích dành cho sản phẩm -->
+								<a href="javascript:void(0);"
+									class="btn-wishlist ms-2 d-flex align-items-center justify-content-center"
+									th:if="${#authentication.name == 'anonymousUser'}" data-bs-toggle="offcanvas"
+									data-bs-target="#offcanvasLoginAlert"
+									style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background-color: white; color: black; border: 2px solid #ccc; transition: none;">
 									<svg width="24" height="24">
+										<use xlink:href="#heart"></use>
+									</svg>
+								</a>
+								<!-- Nút yêu thích cho sản phẩm liên quan -->
+								<a href="javascript:void(0);" th:if="${#authentication.name != 'anonymousUser'}"
+									th:onclick="'toggleFavorite(' + ${relatedSanPham.maSanPham} + ')'"
+									th:classappend="${favoriteProductIds.contains(relatedSanPham.maSanPham) ? 'btn-wishlist-liked' : 'btn-wishlist'}"
+									th:data-product-id="${relatedSanPham.maSanPham}"
+									th:data-liked="${favoriteProductIds.contains(relatedSanPham.maSanPham)}"
+									class="btn-wishlist position-absolute top-0 end-0 m-2"
+									th:style="${favoriteProductIds.contains(relatedSanPham.maSanPham)} ? 
+                        'width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background-color: #e74c3c; color: white; border: 2px solid #ccc; transition: none;' : 
+                        'width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background-color: white; color: black; border: 2px solid #ccc; transition: none;'">
+									<svg class="heart-icon" width="24" height="24">
 										<use xlink:href="#heart"></use>
 									</svg>
 								</a>
@@ -135,189 +140,114 @@
 
 								<!-- Product Details -->
 								<div class="card-body" style="padding: 5px;">
-									<h4 th:text="${relatedSanPham.tenSanPham}" style="font-size: 0.9rem; 
-                    margin: 5px 0; white-space: nowrap; 
-                    overflow: hidden; text-overflow: ellipsis;
-                    padding: 5px;
-                    
-                    ">
-										Tên sản phẩm liên quan</h4>
+									<h3 th:text="${relatedSanPham.tenSanPham}"
+										style="font-size: 0.9rem; margin: 5px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 5px;">
+										Tên sản phẩm liên quan
+									</h3>
 									<span class="qty" th:text="${relatedSanPham.donViTinh.tenDonVi}">Đơn vị</span>
-									<span class="rating">
-										<svg width="24" height="24" class="text-primary">
-											<use xlink:href="#star-solid"></use>
-										</svg> 4.5
-									</span>
 
-									<!-- Price with Promotion -->
-									<p th:if="${sanPhamKhuyenMaiMap[relatedSanPham.maSanPham] != null}"
-										class="text-danger">
-										<span th:text="${relatedSanPham.donGiaBan} + ' VND'"
-											style="text-decoration: line-through;"></span>
+									<!-- Hiển thị giá -->
+									<div>
+										<!-- Nếu có khuyến mãi, hiển thị giá gốc gạch ngang -->
 										<span
-											th:text="${sanPhamGiaSauGiamMap[relatedSanPham.maSanPham]} + ' VND'"></span>
-									</p>
-									<p th:if="${relatedSanPhamKhuyenMaiMap[relatedSanPham.maSanPham] == null}"
-										th:text="${relatedSanPham.donGiaBan} + ' VND'"
-										style="font-weight: 600; font-family: Arial, sans-serif; color: #000;">
-										Giá gốc
-									</p>
-									<!-- Giá sau khi giảm cho sản phẩm liên quan -->
-									<!-- Hiển thị giá sau khi giảm nếu có khuyến mãi -->
-									<p th:if="${relatedSanPhamKhuyenMaiMap[relatedSanPham.maSanPham] != null}">
-										<span th:text="${relatedSanPham.donGiaBan} + ' VND'"
-											style="text-decoration: line-through; color: red;"></span>
-										<span
-											th:text="${relatedSanPhamGiaSauGiamMap[relatedSanPham.maSanPham]} + ' VND'"
-											style="font-weight: 600; font-family: Arial, sans-serif; color: #000;">
+											style="font-size: 12px; color: red; text-decoration: line-through; display: block;"
+											th:if="${relatedSanPhamKhuyenMaiMap[relatedSanPham.maSanPham] != null}"
+											th:text="${relatedSanPham.donGiaBan} + ' VND'">
 										</span>
-									</p>
+										<!-- Nếu có khuyến mãi và giá sau giảm không null -->
+										<span style="font-size: 13px; color: black; font-weight: bold; display: block;"
+											th:if="${relatedSanPhamKhuyenMaiMap[relatedSanPham.maSanPham] != null}"
+											th:text="${relatedSanPhamGiaSauGiamMap[relatedSanPham.maSanPham]} + ' VND'">
+										</span>
+
+										<!-- Nếu không có khuyến mãi hoặc không tính được giá sau giảm, hiển thị giá gốc -->
+										<span style="font-size: 13px; color: black; font-weight: bold; display: block;"
+											th:if="${relatedSanPhamKhuyenMaiMap[relatedSanPham.maSanPham] == null}"
+											th:text="${relatedSanPham.donGiaBan} + ' VND'">
+										</span>
+									</div>
 
 									<!-- Số lượng sản phẩm và nút thêm vào giỏ hàng -->
-									<div class="product-quantity-container d-flex align-items-center mt-3">
+									<div
+										class="product-quantity-container d-flex justify-content-center align-items-center mt-3">
 										<label for="quantity" class="form-label me-2"></label>
 
 										<!-- Ô nhập số lượng -->
 										<input type="number" id="quantity" name="quantity" value="1" min="1"
-											class="form-control quantity-input me-3" style="width: 50px;
-									border: 2px solid #000;" oninput="if(this.value < 1) this.value = 1;">
+											class="form-control quantity-input me-3"
+											style="width: 50px; border: 2px solid #000;"
+											oninput="if(this.value < 1) this.value = 1;">
 
 										<!-- Nút thêm vào giỏ hàng -->
-										<button class="btn btn-warning add-to-cart">
+										<button
+											class="btn btn-warning add-to-cart d-flex align-items-center justify-content-center"
+											style="background-color: #fca503; color: #fff; border: none; transition: background-color 0.3s ease;"
+											onmouseover="this.style.backgroundColor='#e68a00';"
+											onmouseout="this.style.backgroundColor='#fca503';"
+											th:if="${#authentication.name == 'anonymousUser'}"
+											data-bs-toggle="offcanvas" data-bs-target="#offcanvasLoginAlert">
 											<span class="iconify" data-icon="uil:shopping-cart" data-inline="false"
 												style="font-size: 1.5rem; margin-right: 5px;"></span>
+										</button>
 
+										<!-- Nếu người dùng đã đăng nhập, thêm sản phẩm vào giỏ hàng -->
+										<button
+											class="btn btn-warning add-to-cart d-flex align-items-center justify-content-center"
+											style="background-color: #fca503; color: #fff; border: none; transition: background-color 0.3s ease;"
+											onmouseover="this.style.backgroundColor='#e68a00';"
+											onmouseout="this.style.backgroundColor='#fca503';"
+											th:if="${#authentication.name != 'anonymousUser'}" onclick="addToCart()">
+											<span class="iconify" data-icon="uil:shopping-cart" data-inline="false"
+												style="font-size: 1.5rem; margin-right: 5px;"></span>
 										</button>
 									</div>
-
-
 								</div>
-
 							</div>
 						</div>
 					</div>
 				</div>
+
+
 			</div>
-
-
 		</div>
-
-
-
-		</div>
-
-
-
-
-
-
-
-
 	</main>
 
-
 	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-			const quantityInput = document.getElementById('quantity');
+		function toggleFavorite(productId) {
+			const favoriteElement = document.querySelector('[data-product-id="' + productId + '"]');
+			const isLiked = favoriteElement.getAttribute('data-liked') === 'true';
 
-			// Hàm giảm số lượng
-			function decreaseQuantity() {
-				let currentValue = parseInt(quantityInput.value) || 1;
-				quantityInput.value = Math.max(1, currentValue - 1);
-			}
-
-			// Hàm tăng số lượng
-			function increaseQuantity() {
-				let currentValue = parseInt(quantityInput.value) || 1;
-				quantityInput.value = currentValue + 1;
-			}
-
-			// Gán sự kiện cho nút giảm và tăng số lượng
-			document.querySelector(".quantity-left-minus").addEventListener("click", decreaseQuantity);
-			document.querySelector(".quantity-right-plus").addEventListener("click", increaseQuantity);
-
-			// Kiểm tra khi người dùng nhập tay vào input
-			quantityInput.addEventListener("input", function () {
-				// Nếu giá trị nhỏ hơn 1 hoặc không phải là số thì đặt lại về 1
-				quantityInput.value = quantityInput.value < 1 || isNaN(quantityInput.value) ? 1 : quantityInput.value;
-			});
-		});
+			fetch('/customer/favorites/' + (isLiked ? 'remove' : 'add'), {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+				},
+				body: new URLSearchParams({
+					sanPhamId: productId
+				})
+			})
+				.then(response => {
+					if (response.ok) {
+						favoriteElement.classList.toggle('btn-wishlist-liked', !isLiked);
+						favoriteElement.classList.toggle('btn-wishlist', isLiked);
+						favoriteElement.setAttribute('data-liked', (!isLiked).toString());
+						favoriteElement.style.backgroundColor = isLiked ? 'white' : '#e74c3c';
+						favoriteElement.style.color = isLiked ? 'black' : 'white';
+					} else if (response.status === 401) {
+						alert('Bạn cần đăng nhập để sử dụng tính năng này.');
+					} else {
+						alert('Có lỗi xảy ra, vui lòng thử lại.');
+					}
+				})
+				.catch(error => {
+					console.error('Error:', error);
+					alert('Có lỗi xảy ra, vui lòng thử lại.');
+				});
+		}
 	</script>
 
-
-
-
 	<footer th:replace="customer/fragments/footer :: footer"></footer>
-	<div th:replace="~{customer/fragments/script :: script}"></div>
+	<div th:replace="customer/fragments/script :: script"></div>
 </body>
-
-
-
-<style>
-	.heart-icon:hover {
-		background-color: #ff5e5e;
-		color: #fff;
-	}
-
-	.heart-icon:hover svg {
-		fill: #fff;
-	}
-
-	.related-products-list {
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		/* Hiển thị 3 sản phẩm mỗi hàng */
-		gap: 20px;
-		/* Khoảng cách giữa các sản phẩm */
-	}
-
-	.related-product-item {
-		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-		transition: transform 0.2s ease, box-shadow 0.3s ease;
-		background-color: #fff;
-		border-radius: 10px;
-	}
-
-	.card {
-		text-decoration: none;
-		color: inherit;
-		/* Giữ màu chữ tự nhiên */
-	}
-
-	.card:hover {
-		transform: scale(1.05);
-		box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-	}
-
-
-
-	.promotion-info .discount-percent {
-		color: #e63946;
-		/* Màu đỏ đậm để nổi bật phần trăm giảm giá */
-		font-weight: bold;
-	}
-
-	.product-price .final-price {
-		color: #e63946;
-		/* Màu đỏ cho giá sau khi giảm */
-		font-weight: bold;
-	}
-
-	.product-quantity .form-control {
-		max-width: 100px;
-		/* Giảm kích thước khung số lượng */
-	}
-
-	.add-to-cart {
-		background-color: #ffb703;
-		color: #fff;
-		border: none;
-	}
-
-	.add-to-cart:hover {
-		background-color: #faa307;
-		color: #fff;
-	}
-</style>
 
 </html>

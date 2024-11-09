@@ -36,7 +36,7 @@
 	<header th:replace="~{customer/fragments/header :: header}"></header>
 	<main style="display: flex; gap: 20px; padding: 20px;">
 
-	
+
 
 		<!-- Cột 1: Danh sách danh mục -->
 		<div style="flex: 1;">
@@ -137,14 +137,35 @@
 					</span>
 
 					<!-- Wishlist Icon (Heart) -->
-					<a href="#"
-						style="position: absolute; top: 10px; right: 10px; border: 2px solid transparent; border-radius: 50%; padding: 5px; display: flex; align-items: center; justify-content: center; color: #ff5e5e; background-color: #ffffff; font-size: 1.2rem; cursor: pointer; transition: background-color 0.3s ease, color 0.3s ease;"
-						onmouseover="this.style.backgroundColor='#ff5e5e'; this.style.color='#fff';"
-						onmouseout="this.style.backgroundColor='transparent'; this.style.color='#ff5e5e';">
+					<a href="javascript:void(0);" class="btn-wishlist"
+						th:if="${#authentication.name == 'anonymousUser'}" data-bs-toggle="offcanvas"
+						data-bs-target="#offcanvasLoginAlert" style="position: absolute; top: 10px; right: 10px; 
+           width: 40px; height: 40px; border-radius: 50%; 
+           display: flex; align-items: center; justify-content: center; 
+           background-color: white; color: black; border: 2px solid #ccc; 
+           transition: background-color 0.3s ease, color 0.3s ease;">
 						<svg width="24" height="24">
 							<use xlink:href="#heart"></use>
 						</svg>
 					</a>
+
+					<!-- Wishlist Icon for logged-in users -->
+					<a href="javascript:void(0);" th:if="${#authentication.name != 'anonymousUser'}"
+						th:onclick="'toggleFavorite(' + ${sanPham.maSanPham} + ')'"
+						th:classappend="${favoriteProductIds.contains(sanPham.maSanPham) ? 'btn-wishlist-liked' : 'btn-wishlist'}"
+						th:data-product-id="${sanPham.maSanPham}"
+						th:data-liked="${favoriteProductIds.contains(sanPham.maSanPham)}" class="btn-wishlist" th:style="${favoriteProductIds.contains(sanPham.maSanPham)} ? 
+              'position: absolute; top: 10px; right: 10px; width: 40px; height: 40px; border-radius: 50%; 
+               display: flex; align-items: center; justify-content: center; background-color: #e74c3c; color: white; 
+               border: 2px solid #ccc; transition: background-color 0.3s ease, color 0.3s ease;' : 
+              'position: absolute; top: 10px; right: 10px; width: 40px; height: 40px; border-radius: 50%; 
+               display: flex; align-items: center; justify-content: center; background-color: white; color: black; 
+               border: 2px solid #ccc; transition: background-color 0.3s ease, color 0.3s ease;'">
+						<svg width="24" height="24">
+							<use xlink:href="#heart"></use>
+						</svg>
+					</a>
+
 
 					<!-- Product Image -->
 					<figure style="margin-top: 30px;">
@@ -210,6 +231,51 @@
 	<footer th:replace="customer/fragments/footer :: footer"></footer>
 
 	<script>
+		
+		
+		/* script cho nhấn nút yêu thích*/
+		
+		function toggleFavorite(productId) {
+			const favoriteElement = document.querySelector('[data-product-id="' + productId + '"]');
+			const isLiked = favoriteElement.getAttribute('data-liked') === 'true';
+
+			fetch('/customer/favorites/' + (isLiked ? 'remove' : 'add'), {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+				},
+				body: new URLSearchParams({
+					sanPhamId: productId
+				})
+			})
+				.then(response => {
+					if (response.ok) {
+						favoriteElement.classList.toggle('btn-wishlist-liked', !isLiked);
+						favoriteElement.classList.toggle('btn-wishlist', isLiked);
+						favoriteElement.setAttribute('data-liked', (!isLiked).toString());
+						favoriteElement.style.backgroundColor = isLiked ? 'white' : '#e74c3c';
+						favoriteElement.style.color = isLiked ? 'black' : 'white';
+					} else if (response.status === 401) {
+						alert('Bạn cần đăng nhập để sử dụng tính năng này.');
+					} else {
+						alert('Có lỗi xảy ra, vui lòng thử lại.');
+					}
+				})
+				.catch(error => {
+					console.error('Error:', error);
+					alert('Có lỗi xảy ra, vui lòng thử lại.');
+				});
+		}
+		/* script cho nhấn nút yêu thích*/
+		
+		
+		
+		
+		
+		
+		
+		
+		
 
 		const slider = document.getElementById('priceRange');
 		const priceDisplay = document.getElementById('priceDisplay');
@@ -255,7 +321,7 @@
 	</script>
 
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 
