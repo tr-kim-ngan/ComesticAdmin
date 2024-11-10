@@ -54,6 +54,7 @@ public class SanPham {
 	
 	
 	
+	
 
 	// Nhà cung cấp
 	@ManyToMany
@@ -76,20 +77,18 @@ public class SanPham {
     @JoinColumn(name = "MaDonVi", nullable = false)
     private DonViTinh donViTinh;
  
+	@OneToMany(mappedBy = "sanPham")
+	private Set<ChiTietGioHang> chiTietGioHangs;
 
 
 	public SanPham() {
 
 	}
 
-
-	
-
-
 	public SanPham(Integer maSanPham, String tenSanPham, String moTa, String hinhAnh, Integer soLuong,
 			boolean trangThai, BigDecimal donGiaBan, DanhMuc danhMuc, Set<YeuThich> yeuThichs,
 			Set<ChiTietDonNhapHang> chiTietDonNhapHangs, Set<NhaCungCap> nhaCungCaps, Set<KhuyenMai> khuyenMais,
-			DonViTinh donViTinh) {
+			DonViTinh donViTinh, Set<ChiTietGioHang> chiTietGioHangs) {
 		super();
 		this.maSanPham = maSanPham;
 		this.tenSanPham = tenSanPham;
@@ -104,10 +103,8 @@ public class SanPham {
 		this.nhaCungCaps = nhaCungCaps;
 		this.khuyenMais = khuyenMais;
 		this.donViTinh = donViTinh;
+		this.chiTietGioHangs = chiTietGioHangs;
 	}
-
-
-
 
 
 	public Integer getMaSanPham() {
@@ -220,6 +217,14 @@ public class SanPham {
 
 	public void setYeuThichs(Set<YeuThich> yeuThichs) {
 		this.yeuThichs = yeuThichs;
+	}
+
+	public Set<ChiTietGioHang> getChiTietGioHangs() {
+		return chiTietGioHangs;
+	}
+
+	public void setChiTietGioHangs(Set<ChiTietGioHang> chiTietGioHangs) {
+		this.chiTietGioHangs = chiTietGioHangs;
 	}
 
 	

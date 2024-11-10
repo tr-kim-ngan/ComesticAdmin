@@ -1,6 +1,7 @@
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
 
-<div class="container-fluid" th:fragment="header">
+<div class="container-fluid" th:fragment="header"
+	style="position: fixed !important; top: 0; left: 0; width: 100%; z-index: 2000; background-color: white; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
 	<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
 		<defs>
 			<symbol xmlns="http://www.w3.org/2000/svg" id="link" viewBox="0 0 24 24">
@@ -68,175 +69,270 @@
 </div>
 
 <div class="container-fluid" th:fragment="header">
-    <div class="row py-3 border-bottom">
-        <div class="col-sm-4 col-lg-3 text-center text-sm-start">
-            <div class="main-logo">
-                <a th:href="@{/index}">
-                    <img th:src="@{/fe/images/logo1.png}" style="margin-top: 0px;" alt="logo" class="img-fluid">
-                </a>
-            </div>
-        </div>
+	<div class="row py-3 border-bottom">
+		<div class="col-sm-4 col-lg-3 text-center text-sm-start">
+			<div class="main-logo">
+				<a th:href="@{/index}">
+					<img th:src="@{/fe/images/logo1.png}" style="margin-top: 0px;" alt="logo" class="img-fluid">
+				</a>
+			</div>
+		</div>
 
-        <div class="col-sm-6 offset-sm-2 offset-md-0 col-lg-5 d-none d-lg-block">
-            <div class="search-bar row bg-light p-2 my-2 rounded-4">
-                <!-- Biểu mẫu tìm kiếm -->
-                <form id="search-form" th:action="@{/category/search}" method="get" class="row">
-                    <!-- Dropdown danh mục -->
-                    <div class="col-md-4 d-none d-md-block">
-                        <select class="form-select border-0 bg-transparent" id="categorySelect" name="category">
-                            <option value="-1" th:selected="${category == -1}">Tất cả danh mục</option>
-                            <option th:each="cat : ${categories}" th:value="${cat.maDanhMuc}" th:text="${cat.tenDanhMuc}" th:selected="${cat.maDanhMuc == category}"></option>
-                        </select>
-                    </div>
-                    <div class="col-11 col-md-7">
-                        <input type="text" name="keyword" class="form-control border-0 bg-transparent" placeholder="Tìm kiếm" th:value="${keyword}" />
-                    </div>
-                    <div class="col-1 col-md-1">
-                        <button type="submit" class="btn btn-primary">Tìm kiếm</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+		<div class="col-sm-6 offset-sm-2 offset-md-0 col-lg-5 d-none d-lg-block">
+			<div class="search-bar row bg-light p-2 my-2 rounded-4">
+				<!-- Biểu mẫu tìm kiếm -->
+				<form id="search-form" th:action="@{/category/search}" method="get" class="row">
+					<!-- Dropdown danh mục -->
+					<div class="col-md-4 d-none d-md-block">
+						<select class="form-select border-0 bg-transparent" id="categorySelect" name="category">
+							<option value="-1" th:selected="${category == -1}">Tất cả danh mục</option>
+							<option th:each="cat : ${categories}" th:value="${cat.maDanhMuc}"
+								th:text="${cat.tenDanhMuc}" th:selected="${cat.maDanhMuc == category}"></option>
+						</select>
+					</div>
+					<div class="col-11 col-md-7">
+						<input type="text" name="keyword" class="form-control border-0 bg-transparent"
+							placeholder="Tìm kiếm" th:value="${keyword}" />
+					</div>
+					<div class="col-1 col-md-1">
+						<button type="submit" class="btn btn-primary">Tìm kiếm</button>
+					</div>
+				</form>
+			</div>
+		</div>
 
-        <div class="col-sm-8 col-lg-4 d-flex justify-content-end gap-5 align-items-center mt-4 mt-sm-0 justify-content-center justify-content-sm-end">
-            <ul class="d-flex justify-content-end list-unstyled m-0">
-                <!-- Nếu người dùng đã đăng nhập thì hiển thị thông tin khách hàng -->
-                <li th:if="${#authentication.name != 'anonymousUser'}" class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img th:src="@{/fe/images/up/aa.jpg}" alt="Avatar" class="rounded-circle" width="40" height="40">
-                    </a>
-                    <!-- Dropdown Menu -->
-                    <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                        <li>
-                            <div class="dropdown-item text-center">
-                                <h5 class="mb-0" th:text="${#authentication.name}">Tên Khách Hàng</h5>
-                                <span class="badge bg-primary">Khách hàng VIP</span>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="dropdown-divider"></div>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" th:href="@{/customer/account}">Thông tin tài khoản</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" th:href="@{/customer/logout}">Đăng xuất</a>
-                        </li>
-                    </ul>
-                </li>
+		<div
+			class="col-sm-8 col-lg-4 d-flex justify-content-end gap-5 align-items-center mt-4 mt-sm-0 justify-content-center justify-content-sm-end">
+			<ul class="d-flex justify-content-end list-unstyled m-0">
+				<!-- Nếu người dùng đã đăng nhập thì hiển thị thông tin khách hàng -->
+				<li th:if="${#authentication.name != 'anonymousUser'}" class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="javascript:void(0)" id="userDropdown"
+						data-bs-toggle="dropdown" aria-expanded="false">
+						<img th:src="@{/fe/images/up/aa.jpg}" alt="Avatar" class="rounded-circle" width="40"
+							height="40">
+					</a>
+					<!-- Dropdown Menu -->
+					<ul class="dropdown-menu" aria-labelledby="userDropdown">
+						<li>
+							<div class="dropdown-item text-center">
+								<h5 class="mb-0" th:text="${#authentication.name}">Tên Khách Hàng</h5>
+								<span class="badge bg-primary">Khách hàng VIP</span>
+							</div>
+						</li>
+						<li>
+							<div class="dropdown-divider"></div>
+						</li>
+						<li>
+							<a class="dropdown-item" th:href="@{/customer/account}">Thông tin tài khoản</a>
+						</li>
+						<li>
+							<a class="dropdown-item" th:href="@{/customer/logout}">Đăng xuất</a>
+						</li>
+					</ul>
+				</li>
 
-                <!-- Nếu người dùng chưa đăng nhập thì hiển thị đăng nhập và đăng ký -->
-                <li th:if="${#authentication.name == 'anonymousUser'}">
-                    <a th:href="@{/customer/login}" class="btn btn-outline-primary mx-2">Đăng nhập</a>
-                    <a th:href="@{/customer/register}" class="btn btn-primary">Đăng ký</a>
-                </li>
+				<!-- Nếu người dùng chưa đăng nhập thì hiển thị đăng nhập và đăng ký -->
+				<li th:if="${#authentication.name == 'anonymousUser'}">
+					<a th:href="@{/customer/login}" class="btn btn-outline-primary mx-2">Đăng nhập</a>
+					<a th:href="@{/customer/register}" class="btn btn-primary">Đăng ký</a>
+				</li>
 
-                <!-- Yêu thích -->
-                <li>
-                    <a class="rounded-circle bg-light p-2 mx-1"
-                       th:if="${#authentication.name == 'anonymousUser'}"
-                       data-bs-toggle="offcanvas" data-bs-target="#offcanvasLoginAlert" aria-controls="offcanvasLoginAlert">
-                        <i class="fas fa-heart"></i>
-                    </a>
-                    <a class="rounded-circle bg-light p-2 mx-1"
-                       th:if="${#authentication.name != 'anonymousUser'}"
-                       th:href="@{/customer/favorites}">
-                        <i class="fas fa-heart"></i>
-                    </a>
-                </li>
+				<!-- Yêu thích -->
+				<li>
+					<a class="rounded-circle bg-light p-2 mx-1" th:if="${#authentication.name == 'anonymousUser'}"
+						data-bs-toggle="offcanvas" data-bs-target="#offcanvasLoginAlert"
+						aria-controls="offcanvasLoginAlert">
+						<i class="fas fa-heart" style="
+						font-size: 1rem;
+					    
+					     text-align: center;
+					     font-size: 1.2rem;
+					      
+					      "></i>
+					</a>
+					<a class="rounded-circle bg-light p-2 mx-1" th:if="${#authentication.name != 'anonymousUser'}"
+						th:href="@{/customer/favorites}">
+						<div style="position: relative; display: inline-block;">
+							<i class="fas fa-heart" style="
+						font-size: 1rem;
+					    
+					     text-align: center;
+					     font-size: 1.2rem;
+					      
+					      "></i>
+						</div>
+					</a>
+				</li>
 
-                <!-- Đơn hàng Offcanvas -->
-                <li>
-                    <a class="rounded-circle bg-light p-2 mx-1"
-                       th:if="${#authentication.name == 'anonymousUser'}"
-                       data-bs-toggle="offcanvas" data-bs-target="#offcanvasLoginAlert" aria-controls="offcanvasLoginAlert">
-                        <i class="fas fa-box"></i>
-                    </a>
-                    <a class="rounded-circle bg-light p-2 mx-1"
-                       th:if="${#authentication.name != 'anonymousUser'}"
-                       data-bs-toggle="offcanvas" data-bs-target="#offcanvasOrders" aria-controls="offcanvasOrders">
-                        <i class="fas fa-box"></i>
-                    </a>
-                </li>
+				<!-- Đơn hàng Offcanvas -->
+				<li>
+					<a class="rounded-circle bg-light p-2 mx-1" th:if="${#authentication.name == 'anonymousUser'}"
+						data-bs-toggle="offcanvas" data-bs-target="#offcanvasLoginAlert"
+						aria-controls="offcanvasLoginAlert">
+						<i class="fas fa-box"></i>
+					</a>
+					<a class="rounded-circle bg-light p-2 mx-1" th:if="${#authentication.name != 'anonymousUser'}"
+						data-bs-toggle="offcanvas" data-bs-target="#offcanvasOrders" aria-controls="offcanvasOrders">
 
-                <!-- Hộp thư Offcanvas -->
-                <li>
-                    <a class="rounded-circle bg-light p-2 mx-1"
-                       th:if="${#authentication.name == 'anonymousUser'}"
-                       data-bs-toggle="offcanvas" data-bs-target="#offcanvasLoginAlert" aria-controls="offcanvasLoginAlert">
-                        <i class="fas fa-envelope"></i>
-                    </a>
-                    <a class="rounded-circle bg-light p-2 mx-1"
-                       th:if="${#authentication.name != 'anonymousUser'}"
-                       data-bs-toggle="offcanvas" data-bs-target="#offcanvasMessages" aria-controls="offcanvasMessages">
-                        <i class="fas fa-envelope"></i>
-                    </a>
-                </li>
+						<div style="position: relative; display: inline-block;"><i class="fas fa-box" style="
+						font-size: 1rem;
+					    
+					     text-align: center;
+					     font-size: 1.2rem;
+					      
+					      "></i>
+						</div>
+					</a>
+				</li>
 
-                <!-- Giỏ hàng Offcanvas -->
-                <li>
-                    <a class="rounded-circle bg-light p-2 mx-1"
-                       th:if="${#authentication.name == 'anonymousUser'}"
-                       data-bs-toggle="offcanvas" data-bs-target="#offcanvasLoginAlert" aria-controls="offcanvasLoginAlert">
-                        <i class="fas fa-shopping-cart"></i>
-                    </a>
-                    <a class="rounded-circle bg-light p-2 mx-1"
-                       th:if="${#authentication.name != 'anonymousUser'}"
-                       data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
-                        <i class="fas fa-shopping-cart"></i>
-                    </a>
-                </li>
-            </ul>
-        </div>
+				<!-- Hộp thư Offcanvas -->
+				<li>
+					<a class="rounded-circle bg-light p-2 mx-1" th:if="${#authentication.name == 'anonymousUser'}"
+						data-bs-toggle="offcanvas" data-bs-target="#offcanvasLoginAlert"
+						aria-controls="offcanvasLoginAlert">
+						<i class="fas fa-envelope" style="
+						font-size: 1rem;
+					     text-align: center;
+					     font-size: 1.2rem;
+					      
+					      "></i>
+					</a>
+					<a class="rounded-circle bg-light p-2 mx-1" th:if="${#authentication.name != 'anonymousUser'}"
+						data-bs-toggle="offcanvas" data-bs-target="#offcanvasMessages"
+						aria-controls="offcanvasMessages">
+						<div style="position: relative; display: inline-block;">
 
-        <!-- Các Offcanvas của Đơn hàng, Hộp thư, Giỏ hàng -->
-        <!-- Hộp thư Offcanvas -->
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMessages" aria-labelledby="Hộp Thư">
-            <div class="offcanvas-header justify-content-center">
-                <h5 class="offcanvas-title">Hộp Thư</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body">
-                <p>Bạn không có tin nhắn mới nào.</p>
-            </div>
-        </div>
+							<i class="fas fa-envelope" style="
+						font-size: 1rem;
+					     text-align: center;
+					     font-size: 1.2rem;
+					      
+					      "></i>
+						</div>
+					</a>
+				</li>
 
-        <!-- Đơn hàng Offcanvas -->
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasOrders" aria-labelledby="Đơn hàng của bạn">
-            <div class="offcanvas-header justify-content-center">
-                <h5 class="offcanvas-title">Đơn Hàng Của Bạn</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body">
-                <p>Bạn chưa có đơn hàng nào.</p>
-            </div>
-        </div>
+				<!-- Giỏ hàng Offcanvas -->
+				<li>
+					<a class="rounded-circle bg-light p-2 mx-1" th:if="${#authentication.name == 'anonymousUser'}"
+						data-bs-toggle="offcanvas" data-bs-target="#offcanvasLoginAlert"
+						aria-controls="offcanvasLoginAlert">
+						<i class="fas fa-shopping-cart" style="
+						font-size: 1rem;
+					    
+					     text-align: center;
+					     font-size: 1.2rem;
+					      
+					      "></i>
 
-        <!-- Giỏ hàng Offcanvas -->
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCart" aria-labelledby="Giỏ Hàng Của Bạn">
-            <div class="offcanvas-header justify-content-center">
-                <h5 class="offcanvas-title">Giỏ Hàng Của Bạn</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body">
-                <p>Giỏ hàng của bạn đang trống.</p>
-            </div>
-        </div>
+					</a>
+					<a class="rounded-circle bg-light p-2 mx-1" th:if="${#authentication.name != 'anonymousUser'}"
+						data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
+						<div style="position: relative; display: inline-block;">
+							<i class="fas fa-shopping-cart" style="font-size: 1rem;
+					    
+					     text-align: center;
+					     font-size: 1.2rem;"></i>
+							<span id="cart-count" style="
+							        position: absolute;
+							        top: -13px; /* Điều chỉnh vị trí để khớp với icon */
+							        right: -13px;
+							        background-color: #ff0000;
+							        color: #ffffff;
+							        font-size: 0.9rem;
+							        width: 1.8em;
+							        height: 1.8em;
+							        display: flex;
+							        align-items: center;
+							        justify-content: center;
+							        text-align: center;
+							        border-radius: 50%;
+							    ">
+								0
+							</span>
+						</div>
 
-        <!-- Offcanvas thông báo yêu cầu đăng nhập -->
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasLoginAlert" aria-labelledby="Thông báo đăng nhập">
-            <div class="offcanvas-header justify-content-center">
-                <h5 class="offcanvas-title">Bạn cần đăng nhập để xem</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body">
-                <p>Vui lòng đăng nhập để sử dụng tính năng này.</p>
-                <div class="text-center mt-4">
-                    <a th:href="@{/customer/login}" class="btn btn-primary">Đăng nhập</a>
-                </div>
-            </div>
-        </div>
-    </div>
+
+					</a>
+
+
+
+				</li>
+
+
+
+			</ul>
+		</div>
+
+		<!-- Các Offcanvas của Đơn hàng, Hộp thư, Giỏ hàng -->
+		<!-- Hộp thư Offcanvas -->
+		<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMessages" aria-labelledby="Hộp Thư">
+			<div class="offcanvas-header justify-content-center">
+				<h5 class="offcanvas-title">Hộp Thư</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+			</div>
+			<div class="offcanvas-body">
+				<p>Bạn không có tin nhắn mới nào.</p>
+			</div>
+		</div>
+
+		<!-- Đơn hàng Offcanvas -->
+		<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasOrders" aria-labelledby="Đơn hàng của bạn">
+			<div class="offcanvas-header justify-content-center">
+				<h5 class="offcanvas-title">Đơn Hàng Của Bạn</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+			</div>
+			<div class="offcanvas-body">
+				<p>Bạn chưa có đơn hàng nào.</p>
+			</div>
+		</div>
+
+		<!-- Giỏ hàng Offcanvas -->
+		<!-- Offcanvas giỏ hàng -->
+		<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCart" aria-labelledby="Giỏ Hàng Của Bạn">
+			<div class="offcanvas-header justify-content-center">
+				<h5 class="offcanvas-title">Giỏ Hàng Của Bạn</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+			</div>
+			<div class="offcanvas-body">
+				<div th:if="${cartCount > 0}">
+					<ul class="list-group">
+						<li th:each="item : ${cartItems}"
+							class="list-group-item d-flex justify-content-between align-items-center">
+							<span th:text="${item.sanPham.tenSanPham}">Tên Sản Phẩm</span>
+							<span>Số lượng: <span th:text="${item.soLuong}">0</span></span>
+							<span>Giá: <span th:text="${item.sanPham.donGiaBan}">0</span>₫</span>
+						</li>
+					</ul>
+					<div class="text-center mt-4">
+						<a th:href="@{/customer/cart}" class="btn btn-primary">Xem chi tiết giỏ hàng</a>
+					</div>
+				</div>
+				<div th:if="${cartCount == 0}">
+					<p>Giỏ hàng của bạn đang trống.</p>
+				</div>
+			</div>
+		</div>
+
+
+		<!-- Offcanvas thông báo yêu cầu đăng nhập -->
+		<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasLoginAlert"
+			aria-labelledby="Thông báo đăng nhập">
+			<div class="offcanvas-header justify-content-center">
+				<h5 class="offcanvas-title">Bạn cần đăng nhập để xem</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+			</div>
+			<div class="offcanvas-body">
+				<p>Vui lòng đăng nhập để sử dụng tính năng này.</p>
+				<div class="text-center mt-4">
+					<a th:href="@{/customer/login}" class="btn btn-primary">Đăng nhập</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+
 </div>
-
-

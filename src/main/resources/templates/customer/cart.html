@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="customer/fragments/head :: head"></head>
+
+<body>
+	<header th:replace="customer/fragments/header :: header"></header>
+
+	<main class="container my-4">
+		<h2 class="my-5 text-center">Giỏ Hàng Của Bạn</h2>
+
+		<div class="row row-cols-1 row-cols-md-3 g-4">
+			<div th:each="item : ${cartItems}" class="col">
+				<div class="card h-100">
+					<!-- Hình ảnh sản phẩm -->
+					<a th:href="@{'/product/' + ${item.sanPham.maSanPham}}" th:title="${item.sanPham.tenSanPham}">
+						<img th:src="@{'/upload/' + ${item.sanPham.hinhAnh}}" class="card-img-top"
+							alt="Sản phẩm trong giỏ hàng">
+					</a>
+
+					<div class="card-body">
+						<h5 class="card-title" th:text="${item.sanPham.tenSanPham}">Tên sản phẩm</h5>
+						<p>Đơn vị tính: <span th:text="${item.sanPham.donViTinh.tenDonVi}">Đơn vị</span></p>
+						<p>Số lượng: <span th:text="${item.soLuong}">1</span></p>
+
+						<!-- Nếu có khuyến mãi, hiển thị giá gốc và giá đã giảm -->
+						<div th:if="${sanPhamKhuyenMaiMap[item.sanPham.maSanPham] != null}">
+							<p style="text-decoration: line-through;" th:text="${item.sanPham.donGiaBan} + ' VND'">0 VND
+							</p>
+							<p style="font-weight: bold; color: red;"
+								th:text="${sanPhamGiaSauGiamMap[item.sanPham.maSanPham]} + ' VND'">0 VND</p>
+						</div>
+
+						<!-- Nếu không có khuyến mãi -->
+						<div th:if="${sanPhamKhuyenMaiMap[item.sanPham.maSanPham] == null}">
+							<p style="font-weight: bold;" th:text="${item.sanPham.donGiaBan} + ' VND'">0 VND</p>
+						</div>
+					</div>
+
+					<!-- Thao tác xóa sản phẩm khỏi giỏ hàng -->
+					<div class="card-footer text-center">
+						<button class="btn btn-danger" th:attr="onclick=|removeFromCart(${item.sanPham.maSanPham})|"
+							style="background-color: #e3342f; border: none;">
+							Xóa
+						</button>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<!-- Tổng giá trị và nút đặt hàng -->
+		<div class="text-center my-5">
+			<h4>Tổng tiền: <span th:text="${totalPrice} + ' VND'">0 VND</span></h4>
+
+			<a th:href="@{/customer/cart/checkout}" class="btn btn-primary mt-3">Đặt hàng</a>
+		</div>
+	</main>
+
+	<footer th:replace="customer/fragments/footer :: footer"></footer>
+	<div th:replace="customer/fragments/script :: script"></div>
+
+	<script>
+		function removeFromCart(productId) {
+			fetch('/customer/cart/remove', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded'
+				},
+				body: new URLSearchParams({sanPhamId: productId})
+			})
+				.then(response => response.ok ? location.reload() : alert("Lỗi khi xóa sản phẩm"))
+				.catch(() => alert("Lỗi khi xóa sản phẩm"));
+		}
+	</script>
+</body>
+
+</html>

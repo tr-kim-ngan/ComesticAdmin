@@ -51,8 +51,7 @@
 							<div
 								class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
 								<!-- Lặp qua tất cả các sản phẩm và hiển thị -->
-								<div class="col" th:each="sanPham : ${sanPhams}" 
-								style="min-height: 350px; 
+								<div class="col" th:each="sanPham : ${sanPhams}" style="min-height: 350px; 
 								display: flex; 
 								flex-direction: column; 
 								justify-content: space-between; 
@@ -160,16 +159,25 @@
 
 											</div>
 											<!-- Số lượng sản phẩm và nút thêm vào giỏ hàng -->
+											<!-- Số lượng sản phẩm và nút thêm vào giỏ hàng -->
 											<div
 												class="product-quantity-container d-flex justify-content-center align-items-center mt-3">
 												<label for="quantity" class="form-label me-2"></label>
 
-												<!-- Ô nhập số lượng -->
-												<input type="number" id="quantity" name="quantity" value="1" min="1"
-													class="form-control quantity-input me-3" style="width: 50px;
-									border: 2px solid #000;" oninput="if(this.value < 1) this.value = 1;">
+												<!-- Ô nhập số lượng (luôn được render) -->
+												<input type="number" name="quantity" value="1" min="1"
+													class="form-control quantity-input me-3"
+													style="width: 50px; border: 2px solid #000;"
+													th:id="'quantity_' + ${sanPham.maSanPham}"
+													th:data-product-id="${sanPham.maSanPham}">
 
 
+
+
+												
+
+
+												<!-- Nút thêm vào giỏ hàng khi người dùng chưa đăng nhập -->
 												<button
 													class="btn btn-warning add-to-cart d-flex align-items-center justify-content-center"
 													style="background-color: #fca503; color: #fff; border: none; transition: background-color 0.3s ease;"
@@ -180,24 +188,30 @@
 													<span class="iconify" data-icon="uil:shopping-cart"
 														data-inline="false"
 														style="font-size: 1.5rem; margin-right: 5px;"></span>
-
 												</button>
 
-												<!-- Nếu người dùng đã đăng nhập, thêm sản phẩm vào giỏ hàng -->
+												<!-- Nút thêm vào giỏ hàng khi người dùng đã đăng nhập -->
 												<button
 													class="btn btn-warning add-to-cart d-flex align-items-center justify-content-center"
 													style="background-color: #fca503; color: #fff; border: none; transition: background-color 0.3s ease;"
 													onmouseover="this.style.backgroundColor='#e68a00';"
 													onmouseout="this.style.backgroundColor='#fca503';"
-													th:if="${#authentication.name != 'anonymousUser'}"
-													onclick="addToCart()">
+													th:data-product-id="${sanPham.maSanPham}" onclick="addToCart(this)">
 													<span class="iconify" data-icon="uil:shopping-cart"
 														data-inline="false"
 														style="font-size: 1.5rem; margin-right: 5px;"></span>
-
 												</button>
 
 											</div>
+											<script>
+												// Define your addToCart function here, after the DOM is fully loaded
+
+											</script>
+
+
+
+
+
 
 
 
@@ -329,10 +343,16 @@
 												class="product-quantity-container d-flex justify-content-center align-items-center mt-3">
 												<label for="quantity" class="form-label me-2"></label>
 
-												<!-- Ô nhập số lượng -->
-												<input type="number" id="quantity" name="quantity" value="1" min="1"
-													class="form-control quantity-input me-3" style="width: 50px;
-									border: 2px solid #000;" oninput="if(this.value < 1) this.value = 1;">
+												<!-- Ô nhập số lượng (luôn được render) -->
+												
+													
+													<input type="number" name="quantity" value="1" min="1"
+													class="form-control quantity-input me-3"
+													style="width: 50px; border: 2px solid #000;"
+													th:id="'quantity_' + ${sanPham.maSanPham}"
+													th:data-product-id="${sanPham.maSanPham}">
+
+
 
 												<!-- Nút thêm vào giỏ hàng -->
 
@@ -350,20 +370,24 @@
 												</button>
 
 												<!-- Nếu người dùng đã đăng nhập, thêm sản phẩm vào giỏ hàng -->
+												
+												
 												<button
 													class="btn btn-warning add-to-cart d-flex align-items-center justify-content-center"
 													style="background-color: #fca503; color: #fff; border: none; transition: background-color 0.3s ease;"
 													onmouseover="this.style.backgroundColor='#e68a00';"
 													onmouseout="this.style.backgroundColor='#fca503';"
-													th:if="${#authentication.name != 'anonymousUser'}"
-													onclick="addToCart()">
+													th:data-product-id="${sanPham.maSanPham}" onclick="addToCart(this)">
 													<span class="iconify" data-icon="uil:shopping-cart"
 														data-inline="false"
 														style="font-size: 1.5rem; margin-right: 5px;"></span>
-
 												</button>
+												
+												
+												
 
 											</div>
+
 
 
 
@@ -379,6 +403,7 @@
 		</div>
 	</div>
 </section>
+
 
 
 

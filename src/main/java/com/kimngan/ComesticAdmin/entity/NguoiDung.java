@@ -1,5 +1,5 @@
 package com.kimngan.ComesticAdmin.entity;
-
+import jakarta.persistence.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -8,8 +8,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-
+import java.util.Set;
 @Entity
 @Table(name="NguoiDung")
 public class NguoiDung {
@@ -33,12 +34,18 @@ public class NguoiDung {
     @ManyToOne
     @JoinColumn(name = "maPhieuGiamGia", referencedColumnName = "maPhieuGiamGia",nullable = true)
     private PhieuGiamGia phieuGiamGia;
-    
+    // Quan hệ Một-Nhiều với Giỏ Hàng
+    @OneToMany(mappedBy = "nguoiDung", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<GioHang> gioHangs;
 
     // Constructors, Getters and Setters
     public NguoiDung() {}    
-public NguoiDung(Integer maNguoiDung, String tenNguoiDung, String matKhau, String email, String soDienThoai,
-			QuyenTruyCap quyenTruyCap, PhieuGiamGia phieuGiamGia) {
+   
+
+
+
+    public NguoiDung(Integer maNguoiDung, String tenNguoiDung, String matKhau, String email, String soDienThoai,
+			QuyenTruyCap quyenTruyCap, PhieuGiamGia phieuGiamGia, Set<GioHang> gioHangs) {
 		super();
 		this.maNguoiDung = maNguoiDung;
 		this.tenNguoiDung = tenNguoiDung;
@@ -47,16 +54,13 @@ public NguoiDung(Integer maNguoiDung, String tenNguoiDung, String matKhau, Strin
 		this.soDienThoai = soDienThoai;
 		this.quyenTruyCap = quyenTruyCap;
 		this.phieuGiamGia = phieuGiamGia;
+		this.gioHangs = gioHangs;
 	}
 
-//    public NguoiDung(String tenNguoiDung, String matKhau, String email, String soDienThoai) {
-//        this.tenNguoiDung = tenNguoiDung;
-//        this.matKhau = matKhau;
-//        this.email = email;
-//        this.soDienThoai = soDienThoai;
-//    }
 
-    public Integer getMaNguoiDung() {
+
+
+	public Integer getMaNguoiDung() {
         return maNguoiDung;
     }
 
@@ -108,8 +112,13 @@ public NguoiDung(Integer maNguoiDung, String tenNguoiDung, String matKhau, Strin
 	public void setPhieuGiamGia(PhieuGiamGia phieuGiamGia) {
 		this.phieuGiamGia = phieuGiamGia;
 	}
-    
-    
-    
-    
+
+	public Set<GioHang> getGioHangs() {
+		return gioHangs;
+	}
+
+	public void setGioHangs(Set<GioHang> gioHangs) {
+		this.gioHangs = gioHangs;
+	}
+     
 }
