@@ -144,7 +144,27 @@ public class CustomerCategoryController {
 	@GetMapping("/search")
 	public String searchProducts(@RequestParam(value = "category", required = false) Integer category,
 			@RequestParam(value = "keyword", required = false) String keyword,
-			@RequestParam(defaultValue = "0") int page, Model model) {
+			@RequestParam(defaultValue = "0") int page, Model model, Authentication authentication) {
+
+		NguoiDung currentUser = null;
+		if (authentication != null && authentication.isAuthenticated()) {
+			Object principal = authentication.getPrincipal();
+			if (principal instanceof NguoiDungDetails) {
+				// Ép kiểu principal thành NguoiDungDetails và lấy NguoiDung
+				NguoiDungDetails userDetails = (NguoiDungDetails) principal;
+				currentUser = userDetails.getNguoiDung();
+				System.out.println("Current user: " + currentUser.getTenNguoiDung());
+			}
+		}
+
+		// Nếu người dùng đã đăng nhập, lấy danh sách sản phẩm yêu thích
+		Set<Integer> favoriteProductIds = new HashSet<>();
+		if (currentUser != null) {
+			favoriteProductIds = yeuThichService.getFavoriteProductIdsForUser(currentUser);
+			System.out.println("favoriteProductIds: " + favoriteProductIds);
+		}
+
+		model.addAttribute("favoriteProductIds", favoriteProductIds);
 
 		Page<SanPham> searchResults;
 		if (category == null || category == -1) {

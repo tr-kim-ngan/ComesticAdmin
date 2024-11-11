@@ -1,17 +1,5 @@
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="script">
-	<script>
-		function updateCartCount() {
-			fetch('/customer/cart/count')
-				.then(response => response.json())
-				.then(data => {
-					document.querySelector('.badge.bg-danger').textContent = data;
-				})
-				.catch(error => console.error('Error:', error));
-		}
 
-		document.addEventListener("DOMContentLoaded", updateCartCount);
-	</script>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script th:src="@{/fe/js/jquery-1.11.0.min.js}"></script>
 	<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
@@ -26,76 +14,135 @@
 		crossorigin="anonymous"></script>
 	<!-- Bootstrap JS (Placed before closing body tag) -->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-	<script>console.log("Script file loaded successfully.");
+	<script>console.log("file Script  tải thành công.");
 	</script>
 	<!-- script.html -->
 	<!-- Đoạn mã script để cập nhật số lượng sản phẩm trong giỏ hàng -->
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			// Chọn tất cả các nút giỏ hàng yêu cầu hiển thị offcanvas khi chưa đăng nhập
+			const loginAlertButtons = document.querySelectorAll('.btn-warning.add-to-cart[data-bs-toggle="offcanvas"]');
 
+			loginAlertButtons.forEach(button => {
+				button.addEventListener('click', function (event) {
+					event.preventDefault(); // Ngăn chặn hành vi chuyển hướng mặc định khi nhấn nút
+
+					// Lấy phần tử offcanvas thông báo đăng nhập
+					const offcanvasElement = document.getElementById('offcanvasLoginAlert');
+
+					if (offcanvasElement) { // Kiểm tra nếu offcanvas tồn tại
+						const offcanvas = new bootstrap.Offcanvas(offcanvasElement);
+						offcanvas.show(); // Hiển thị offcanvas
+					} else {
+						console.error("Offcanvas element with ID 'offcanvasLoginAlert' not found.");
+					}
+				});
+			});
+		});
+
+	</script>
 
 
 	<script>
-		// Gọi hàm updateCartCount khi trang được tải
+
+
+
+
+
+		// Khởi động các hàm cập nhật ngay khi trang được tải
 		document.addEventListener("DOMContentLoaded", function () {
-			console.log("Trang /category đã tải hoàn tất");
-			setTimeout(updateCartCount, 200); // Thử thêm một độ trễ nhỏ
+			console.log("Trang đã tải hoàn tất");
+			setTimeout(updateCartCount, 200); // Thêm độ trễ để đảm bảo dữ liệu được tải
 		});
 
-		// Hàm updateCartCount để lấy số lượng từ /customer/cart/count và cập nhật vào badge
+		// Hàm cập nhật số lượng hiển thị giỏ hàng trên icon giỏ hàng
 		function updateCartCount() {
-			console.log("Đang chạy hàm updateCartCount");
 			fetch('/customer/cart/count')
 				.then(response => response.json())
 				.then(count => {
-					// Cập nhật số lượng sản phẩm trong icon giỏ hàng
+					console.log("Số lượng sản phẩm trong giỏ hàng:", count); // Kiểm tra giá trị
 					let cartCountElement = document.getElementById('cart-count');
 					if (cartCountElement) {
 						cartCountElement.textContent = count;
-					} else {
-						console.warn('Phần tử với ID "cart-count" không tồn tại trên trang này.');
 					}
 				})
 				.catch(error => console.error('Error updating cart count:', error));
 		}
 
+		// Hàm reload nội dung giỏ hàng mà không tải lại toàn bộ trang
+		function reloadCartItems() {
+			fetch('/customer/cart/items')
+				.then(response => {
+					if (!response.ok) {
+						throw new Error('Lỗi mạng không mong muốn: ' + response.status);
+					}
+					return response.text();
+				})
+				.then(html => {
+					console.log("Nội dung giỏ hàng mới:", html); // Kiểm tra nội dung mới
+					document.querySelector("#cartItemsContainer").innerHTML = html;
+				})
+				.catch(error => {
+					console.error('Error:', error);
+				});
+		}
 
 
-		function addToCart(buttonElement) {
-			// Lấy productId từ thuộc tính data-product-id của nút
-			const productId = buttonElement.getAttribute('data-product-id');
-			console.log("Product ID:", productId);
 
-			// Kiểm tra nếu productId không hợp lệ
-			if (!productId) {
-				console.error("Product ID không hợp lệ.");
-				alert("Có lỗi xảy ra. Product ID không hợp lệ.");
-				return;
+		// Hàm kiểm tra và điều chỉnh số lượng hợp lệ
+		function validateQuantity(inputElement) {
+			if (inputElement.value < 1) {
+				inputElement.value = 1;
 			}
-
-			// Sử dụng ID đã render để tìm ô nhập số lượng
-			const quantityInput = document.getElementById(`quantity_${productId}`);
-			if (!quantityInput) {
-				console.error("Không tìm thấy ô nhập số lượng với ID: quantity_" + productId);
-				alert("Có lỗi xảy ra. Không tìm thấy ô nhập số lượng.");
-				return;
+			const maxLength = 5;
+			if (inputElement.value.length > maxLength) {
+				inputElement.value = inputElement.value.slice(0, maxLength);
 			}
+		}
 
-			// Lấy giá trị số lượng từ ô nhập
-			const quantity = parseInt(quantityInput.value);
-			if (isNaN(quantity) || quantity < 1) {
+		// Xóa sản phẩm khỏi giỏ hàng trực tiếp từ Offcanvas giỏ hàng
+		function removeItemFromCart(sanPhamId) {
+			fetch('/customer/cart/remove', {
+				method: 'POST',
+				headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+				body: new URLSearchParams({sanPhamId: sanPhamId})
+			})
+				.then(response => {
+					if (response.ok) {
+						alert("Sản phẩm đã được xóa khỏi giỏ hàng thành công!");
+						localStorage.setItem('offcanvasOpen', 'true');
+						updateCartCount();
+						location.reload();
+					} else {
+						throw new Error('Lỗi mạng không mong muốn: ' + response.status);
+					}
+				})
+				.catch(error => {
+					console.error('Error:', error);
+					alert("Có lỗi xảy ra. Vui lòng thử lại!");
+				});
+		}
+
+		// Kiểm tra và mở lại Offcanvas nếu trước đó đã mở
+		document.addEventListener('DOMContentLoaded', function () {
+			if (localStorage.getItem('offcanvasOpen') === 'true') {
+				const offcanvasCart = new bootstrap.Offcanvas(document.getElementById('offcanvasCart'));
+				offcanvasCart.show();
+				localStorage.removeItem('offcanvasOpen');
+			}
+		});
+
+		// Cập nhật số lượng sản phẩm trực tiếp trong giỏ hàng
+		function updateItemQuantity(productId, newQuantity) {
+			if (isNaN(newQuantity) || newQuantity < 1) {
 				alert("Vui lòng nhập số lượng hợp lệ.");
 				return;
 			}
 
-			// Gửi yêu cầu thêm sản phẩm vào giỏ hàng
-			fetch('/customer/cart/add', {
+			fetch('/customer/cart/updateQuantity', {
 				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					productId: parseInt(productId, 10),
-					quantity: parseInt(quantity, 10)
-				})
+				headers: {'Content-Type': 'application/json'},
+				body: JSON.stringify({productId: productId, quantity: newQuantity})
 			})
 				.then(response => {
 					if (!response.ok) {
@@ -105,21 +152,17 @@
 				})
 				.then(data => {
 					if (data.success) {
-						alert("Sản phẩm đã được thêm vào giỏ hàng thành công!");
-						updateCartCount(); // cập nhật lại số lượng trong giỏ hàng
+						alert("Số lượng sản phẩm đã được cập nhật thành công!");
 					} else {
-						alert("Có lỗi xảy ra. Vui lòng thử lại!");
+						alert("Có lỗi xảy ra khi cập nhật. Vui lòng thử lại!");
 					}
 				})
 				.catch(error => {
 					console.error('Error:', error);
-					alert("Có lỗi xảy ra. Vui lòng thử lại!");
+					alert("Có lỗi xảy ra khi cập nhật. Vui lòng thử lại!");
 				});
 		}
-
-
-		
-
-
-
 	</script>
+
+
+</div>

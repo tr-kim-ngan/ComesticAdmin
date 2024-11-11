@@ -10,4 +10,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface GioHangRepository extends JpaRepository<GioHang, Integer> {
 	// Tìm giỏ hàng theo người dùng
     Optional<GioHang> findByNguoiDung(NguoiDung nguoiDung);
+
 }

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kimngan.ComesticAdmin.entity.ChiTietGioHang;
 import com.kimngan.ComesticAdmin.entity.GioHang;
@@ -32,6 +33,8 @@ import com.kimngan.ComesticAdmin.services.ChiTietGioHangService;
 import com.kimngan.ComesticAdmin.services.GioHangService;
 import com.kimngan.ComesticAdmin.services.NguoiDungService;
 import com.kimngan.ComesticAdmin.services.SanPhamService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/customer/cart")
@@ -99,48 +102,48 @@ public class GioHangController {
 	}
 
 	@PostMapping("/add")
-	@ResponseBody
-	public ResponseEntity<Map<String, Object>> addToCart(@RequestBody Map<String, Object> payload,
-	                                                     Principal principal) {
-	    Map<String, Object> response = new HashMap<>();
+	public String addToCart(@RequestParam("productId") Integer productId, @RequestParam("quantity") Integer quantity,
+			Principal principal, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+		Map<String, Object> response = new HashMap<>();
 
-	    if (principal == null) {
-	        response.put("success", false);
-	        response.put("message", "Vui lòng đăng nhập để thêm vào giỏ hàng.");
-	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-	    }
+		// Kiểm tra người dùng đã đăng nhập hay chưa
+		if (principal == null) {
+			redirectAttributes.addFlashAttribute("error", "Vui lòng đăng nhập để thêm vào giỏ hàng.");
+			return "redirect:/login"; // Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+		}
 
-	    try {
-	        Integer productId = Integer.parseInt(payload.get("productId").toString());
-	        Integer quantity = Integer.parseInt(payload.get("quantity").toString());
+		try {
+			// Log để kiểm tra giá trị nhận từ form
+			System.out.println("ProductId nhận được: " + productId);
+			System.out.println("Số lượng nhận được: " + quantity);
 
-	        NguoiDung currentUser = nguoiDungService.findByTenNguoiDung(principal.getName());
-	        SanPham sanPham = sanPhamService.findById(productId);
+			if (quantity < 1) {
+				redirectAttributes.addFlashAttribute("error", "Số lượng không hợp lệ.");
+				return "redirect:" + request.getHeader("Referer"); // Trở lại trang hiện tại
+			}
 
-	        // Kiểm tra nếu sản phẩm không tìm thấy
-	        if (sanPham == null) {
-	            response.put("success", false);
-	            response.put("message", "Sản phẩm không tồn tại.");
-	            return ResponseEntity.badRequest().body(response);
-	        }
+			// Lấy người dùng hiện tại
+			NguoiDung currentUser = nguoiDungService.findByTenNguoiDung(principal.getName());
+			Optional<SanPham> optionalSanPham = sanPhamService.findByIdOptional(productId);
 
-	        gioHangService.addToCart(currentUser, sanPham, quantity);
+			if (!optionalSanPham.isPresent()) {
+				redirectAttributes.addFlashAttribute("error", "Sản phẩm không tồn tại.");
+				return "redirect:" + request.getHeader("Referer");
+			}
 
-	        response.put("success", true);
-	        response.put("message", "Sản phẩm đã được thêm vào giỏ hàng!");
-	        return ResponseEntity.ok(response);
+			SanPham sanPham = optionalSanPham.get();
+			gioHangService.addToCart(currentUser, sanPham, quantity);
 
-	    } catch (NumberFormatException | NullPointerException e) {
-	        response.put("success", false);
-	        response.put("message", "Dữ liệu không hợp lệ.");
-	        return ResponseEntity.badRequest().body(response);
-	    } catch (Exception e) {
-	        response.put("success", false);
-	        response.put("message", "Lỗi trong quá trình thêm sản phẩm vào giỏ hàng.");
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-	    }
+			// Thông báo thành công và quay lại trang hiện tại
+			redirectAttributes.addFlashAttribute("success", "Sản phẩm đã được thêm vào giỏ hàng!");
+			return "redirect:" + request.getHeader("Referer");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			redirectAttributes.addFlashAttribute("error", "Lỗi trong quá trình thêm sản phẩm vào giỏ hàng.");
+			return "redirect:" + request.getHeader("Referer");
+		}
 	}
-
 
 	@GetMapping("/count")
 	@ResponseBody
@@ -178,6 +181,30 @@ public class GioHangController {
 
 		// Chuyển hướng tới trang đơn hàng sau khi thanh toán
 		return "redirect:/customer/orders";
+	}
+
+	@PostMapping("/update-quantity")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> updateCartItemQuantity(@RequestParam("sanPhamId") Integer sanPhamId,
+			@RequestParam("quantity") Integer newQuantity, Principal principal) {
+		Map<String, Object> response = new HashMap<>();
+
+		try {
+			// Lấy người dùng hiện tại
+			NguoiDung currentUser = getCurrentUser(principal);
+			// Lấy sản phẩm theo ID
+			SanPham sanPham = sanPhamService.findById(sanPhamId);
+
+			// Cập nhật số lượng trong giỏ hàng
+			gioHangService.updateCartItemQuantity(currentUser, sanPham, newQuantity);
+
+			response.put("success", true);
+			return ResponseEntity.ok(response);
+		} catch (Exception e) {
+			response.put("success", false);
+			response.put("message", "Đã xảy ra lỗi khi cập nhật số lượng sản phẩm.");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		}
 	}
 
 	@ModelAttribute("cartItems")

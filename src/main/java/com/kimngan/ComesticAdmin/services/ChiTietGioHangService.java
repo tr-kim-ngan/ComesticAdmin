@@ -11,4 +11,7 @@ public interface ChiTietGioHangService {
     void updateQuantity(GioHang gioHang, SanPham sanPham, int soLuong);  // Cập nhật số lượng sản phẩm
     ChiTietGioHang findByGioHangAndSanPham(GioHang gioHang, SanPham sanPham);  // Tìm chi tiết sản phẩm trong giỏ hàng
     void delete(ChiTietGioHang chiTietGioHang);  // Xóa chi tiết sản phẩm khỏi giỏ hàng
+    void addOrUpdateChiTietGioHang(GioHang gioHang, SanPham sanPham, int soLuong);
+
+
 }

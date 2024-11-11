@@ -94,7 +94,7 @@
 						<input type="text" name="keyword" class="form-control border-0 bg-transparent"
 							placeholder="Tìm kiếm" th:value="${keyword}" />
 					</div>
-					<div class="col-1 col-md-1">
+					<div class="col-2 col-md-1">
 						<button type="submit" class="btn btn-primary">Tìm kiếm</button>
 					</div>
 				</form>
@@ -129,6 +129,7 @@
 							<a class="dropdown-item" th:href="@{/customer/logout}">Đăng xuất</a>
 						</li>
 					</ul>
+
 				</li>
 
 				<!-- Nếu người dùng chưa đăng nhập thì hiển thị đăng nhập và đăng ký -->
@@ -251,17 +252,20 @@
 								0
 							</span>
 						</div>
-
-
 					</a>
 
 
-
 				</li>
-
-
-
 			</ul>
+			<div th:if="${success}" class="alert alert-success mt-3" role="alert">
+				<span th:text="${success}"></span>
+			</div>
+			<div th:if="${error}" class="alert alert-danger mt-3" role="alert">
+				<span th:text="${error}"></span>
+			</div>
+
+
+
 		</div>
 
 		<!-- Các Offcanvas của Đơn hàng, Hộp thư, Giỏ hàng -->
@@ -288,7 +292,7 @@
 		</div>
 
 		<!-- Giỏ hàng Offcanvas -->
-		<!-- Offcanvas giỏ hàng -->
+		<!-- Giỏ hàng Offcanvas -->
 		<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCart" aria-labelledby="Giỏ Hàng Của Bạn">
 			<div class="offcanvas-header justify-content-center">
 				<h5 class="offcanvas-title">Giỏ Hàng Của Bạn</h5>
@@ -300,8 +304,19 @@
 						<li th:each="item : ${cartItems}"
 							class="list-group-item d-flex justify-content-between align-items-center">
 							<span th:text="${item.sanPham.tenSanPham}">Tên Sản Phẩm</span>
-							<span>Số lượng: <span th:text="${item.soLuong}">0</span></span>
+
+							<!-- Ô nhập số lượng -->
+							<input type="number" min="1" th:id="'quantity_' + ${item.sanPham.maSanPham}"
+								class="form-control quantity-input me-3" th:value="${item.soLuong}"
+								th:attr="onchange='updateItemQuantity(' + ${item.sanPham.maSanPham} + ', this.value)'">
+
+
+							<!-- Giá sản phẩm -->
 							<span>Giá: <span th:text="${item.sanPham.donGiaBan}">0</span>₫</span>
+
+							<!-- Nút xóa sản phẩm -->
+							<button type="button" class="btn btn-danger btn-sm"
+								th:onclick="'removeItemFromCart(' + ${item.sanPham.maSanPham} + ')'">Xóa</button>
 						</li>
 					</ul>
 					<div class="text-center mt-4">
@@ -312,10 +327,13 @@
 					<p>Giỏ hàng của bạn đang trống.</p>
 				</div>
 			</div>
+
+
 		</div>
 
 
-		<!-- Offcanvas thông báo yêu cầu đăng nhập -->
+
+
 		<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasLoginAlert"
 			aria-labelledby="Thông báo đăng nhập">
 			<div class="offcanvas-header justify-content-center">
@@ -329,6 +347,7 @@
 				</div>
 			</div>
 		</div>
+
 	</div>
 
 

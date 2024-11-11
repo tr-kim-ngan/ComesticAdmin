@@ -40,19 +40,23 @@ public class GioHangServiceImpl implements GioHangService {
 		});
 	}
 
+	
+	
+	
 	@Override
-	public void addToCart(NguoiDung nguoiDung, SanPham sanPham, Integer soLuong) {
+	public void addToCart(NguoiDung nguoiDung, SanPham sanPham, Integer quantity) {
 	    GioHang gioHang = getOrCreateGioHang(nguoiDung);
-	    ChiTietGioHangId id = new ChiTietGioHangId(gioHang.getMaGioHang(), sanPham.getMaSanPham());
 
-	    ChiTietGioHang chiTietGioHang = chiTietGioHangRepository.findById(id)
-	        .orElse(new ChiTietGioHang(id, gioHang, sanPham, 0)); // Nếu chưa có thì khởi tạo mới
-	    
-	    chiTietGioHang.setSoLuong(chiTietGioHang.getSoLuong() + soLuong); // Cập nhật số lượng
-	    chiTietGioHangRepository.save(chiTietGioHang);
+	    // In ra thông tin người dùng, sản phẩm, và số lượng nhập vào
+	    System.out.println("Người dùng: " + nguoiDung.getTenNguoiDung());
+	    System.out.println("Sản phẩm: " + sanPham.getTenSanPham() + " (ID: " + sanPham.getMaSanPham() + ")");
+	    System.out.println("Số lượng nhập vào: " + quantity);
+
+	    // Gọi phương thức addOrUpdateChiTietGioHang từ ChiTietGioHangService để thêm hoặc cập nhật sản phẩm trong giỏ hàng
+	    chiTietGioHangService.addOrUpdateChiTietGioHang(gioHang, sanPham, quantity);
 	}
 
-
+	
 	@Override
 	public void removeFromCart(NguoiDung nguoiDung, SanPham sanPham) {
 		GioHang gioHang = getOrCreateGioHang(nguoiDung);
@@ -71,6 +75,29 @@ public class GioHangServiceImpl implements GioHangService {
 	public List<ChiTietGioHang> viewCartItems(NguoiDung nguoiDung) {
 		GioHang gioHang = getOrCreateGioHang(nguoiDung);
 		return chiTietGioHangRepository.findByGioHang(gioHang);
+	}
+
+	@Override
+	public void updateCartItemQuantity(NguoiDung nguoiDung, SanPham sanPham, Integer newQuantity) {
+		// Lấy giỏ hàng của người dùng
+		GioHang gioHang = getOrCreateGioHang(nguoiDung);
+
+		// Tìm chi tiết giỏ hàng cho sản phẩm cần cập nhật
+		Optional<ChiTietGioHang> optionalChiTietGioHang = chiTietGioHangRepository.findByGioHangAndSanPham(gioHang,
+				sanPham);
+
+		if (optionalChiTietGioHang.isPresent()) {
+			ChiTietGioHang chiTietGioHang = optionalChiTietGioHang.get();
+			// Thay đổi số lượng thành giá trị mới, không cộng thêm
+			chiTietGioHang.setSoLuong(newQuantity);
+			System.out.println("Cập nhật sản phẩm của updateCartItemQuantity: " + sanPham.getMaSanPham()
+					+ " của updateCartItemQuantity thành số lượng mới: " + newQuantity);
+
+			// Lưu thay đổi vào database
+			chiTietGioHangRepository.save(chiTietGioHang);
+		} else {
+			throw new RuntimeException("Sản phẩm không có trong giỏ hàng của bạn.");
+		}
 	}
 
 }

@@ -34,6 +34,12 @@ public class ChiTietGioHang implements Serializable {
         this.sanPham = sanPham;
         this.soLuong = soLuong;
     }
+    public ChiTietGioHang(GioHang gioHang, SanPham sanPham, int soLuong) {
+        this.id = new ChiTietGioHangId(gioHang.getMaGioHang(), sanPham.getMaSanPham());
+        this.gioHang = gioHang;
+        this.sanPham = sanPham;
+        this.soLuong = soLuong;
+    }
 
 
    

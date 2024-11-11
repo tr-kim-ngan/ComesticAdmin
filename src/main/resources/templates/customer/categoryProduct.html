@@ -25,11 +25,6 @@
 	</style>
 
 
-
-
-
-
-
 </head>
 
 <body>
@@ -208,16 +203,50 @@
 					<!-- Số lượng sản phẩm và nút thêm vào giỏ hàng (phần dưới cùng) -->
 					<div
 						style="display: flex; align-items: center; justify-content: center; margin-top: 15px; position: absolute; bottom: 10px; width: 100%;">
-						<input type="number" id="quantity" name="quantity" value="1" min="1"
-							style="width: 50px; border: 2px solid #000; margin-right: 10px;"
-							oninput="if(this.value < 1) this.value = 1;">
-						<button class="btn btn-warning add-to-cart d-flex align-items-center justify-content-center"
-							style="background-color: #fca503; color: #fff; border: none; transition: background-color 0.3s ease;"
-							onmouseover="this.style.backgroundColor='#e68a00';"
-							onmouseout="this.style.backgroundColor='#fca503';">
-							<span class="iconify" data-icon="uil:shopping-cart" data-inline="false"
-								style="font-size: 1.5rem; margin-right: 5px;"></span>
-						</button>
+
+						<label for="quantity" class="form-label me-2"></label>
+
+						<form th:action="@{/customer/cart/add}" method="post" class="d-flex align-items-center">
+							<!-- Ô nhập số lượng -->
+							<input type="number" name="quantity" value="1" min="1" class="form-control quantity-input"
+								style="width: 80px; border: 2px solid #000; text-align: center;"
+								th:id="'quantity_' + ${sanPham.maSanPham}" th:data-product-id="${sanPham.maSanPham}" />
+
+							<!-- Ẩn mã sản phẩm trong input hidden để gửi lên server -->
+							<input type="hidden" name="productId" th:value="${sanPham.maSanPham}" />
+							<button class="btn btn-warning add-to-cart d-flex align-items-center justify-content-center"
+								style="background-color: #fca503; color: #fff; border: none; transition: background-color 0.3s ease;"
+								onmouseover="this.style.backgroundColor='#e68a00';"
+								onmouseout="this.style.backgroundColor='#fca503';"
+								th:if="${#authentication.name == 'anonymousUser'}" data-bs-toggle="offcanvas"
+								data-bs-target="#offcanvasLoginAlert">
+								<span class="iconify" data-icon="uil:shopping-cart" data-inline="false"
+									style="font-size: 1.5rem; margin-right: 5px;"></span>
+							</button>
+
+							<!-- Nút thêm vào giỏ hàng khi người dùng đã đăng nhập -->
+							<button type="submit"
+								class="btn btn-warning add-to-cart d-flex align-items-center justify-content-center"
+								style="background-color: #fca503; color: #fff; border: none; transition: background-color 0.3s ease;"
+								onmouseover="this.style.backgroundColor='#e68a00';"
+								onmouseout="this.style.backgroundColor='#fca503';"
+								th:if="${#authentication.name != 'anonymousUser'}"
+								th:data-product-id="${sanPham.maSanPham}">
+								<span class="iconify" data-icon="uil:shopping-cart" data-inline="false"
+									style="font-size: 1.5rem; margin-right: 5px;"></span>
+							</button>
+
+
+							<!-- Nút thêm vào giỏ hàng -->
+
+						</form>
+
+
+
+
+
+
+
 					</div>
 				</div>
 			</div>
@@ -319,9 +348,9 @@
 
 
 	</script>
-	<div th:replace="customer/fragments/script::script"> </div>
-	
 
+	<div th:replace="customer/fragments/script :: script"></div>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
